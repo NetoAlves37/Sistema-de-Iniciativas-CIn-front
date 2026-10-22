@@ -3,7 +3,8 @@ import { Outlet, Navigate, Link as RouterLink, useLocation } from "react-router-
 import type { AuthContextProps } from "react-oidc-context";
 import { sidebar } from "../../utils/sidebar";
 import { useAuthorization } from "../../hooks/useAuthorization";
-import { ADMIN_ONLY_LINKS, Links } from "../../utils/enums";
+import { MeProvider } from "../../modules/identidade/MeProvider";
+import { COMITE_ONLY_LINKS, Links } from "../../utils/enums";
 // Named import: lets the bundler drop the rest of package.json.
 import { version as appVersion } from "../../../package.json";
 
@@ -25,15 +26,15 @@ function CinnamonRouterLink({ href, ...rest }: React.ComponentProps<"a"> & { hre
 }
 
 export default function PageCin({ auth, permittedRoles, children }: PageCinProps) {
-  const { isAdmin } = useAuthorization();
+  const { isComite } = useAuthorization();
   const { pathname } = useLocation();
 
-  // Admin-only items stay hidden from every other profile.
+  // Itens exclusivos do comitê somem do menu de quem não é do comitê.
   const visibleNavMain = sidebar.navMain.filter(
-    (link) => isAdmin || !ADMIN_ONLY_LINKS.includes(link.href ?? ""),
+    (link) => isComite || !COMITE_ONLY_LINKS.includes(link.href ?? ""),
   );
 
-  // Título do header: nome da página atual (ex: "Tarefas de Exemplo"), não o
+  // Título do header: nome da página atual (ex: "Início"), não o
   // nome do projeto — o nome da app já aparece no topo da sidebar.
   const currentPageTitle =
     sidebar.navMain.find((link) => link.href === pathname)?.title ?? sidebar.appName;
@@ -72,11 +73,33 @@ export default function PageCin({ auth, permittedRoles, children }: PageCinProps
         // Preset "cin": traz o bloco de Suporte Técnico do CIn pronto.
         variant: "cin",
         appVersion,
+        // linkColumns substitui as colunas do preset: repetimos "Recursos" e acrescentamos
+        // o link de Privacidade (RNF-01) em todas as telas. O Footer abre links em nova aba.
+        linkColumns: [
+          {
+            title: "Recursos",
+            links: [
+              { label: "Materiais", href: "https://ascom.cin.ufpe.br/materiais" },
+              { label: "Portal CIn", href: "https://portal.cin.ufpe.br" },
+              { label: "Intranet", href: "https://intranet.cin.ufpe.br" },
+              { label: "Informações públicas", href: "https://info.cin.ufpe.br" },
+            ],
+          },
+          {
+            title: "Sistema",
+            links: [
+              {
+                label: "Privacidade",
+                href: `${import.meta.env.BASE_URL.replace(/\/$/, "")}${Links.PRIVACIDADE}`,
+              },
+            ],
+          },
+        ],
       }}
       centralized={false}
       haveToast={false} // Toasts already handled in App.tsx
     >
-      {children ?? <Outlet />}
+      <MeProvider>{children ?? <Outlet />}</MeProvider>
     </PageWithAuth>
   );
 }

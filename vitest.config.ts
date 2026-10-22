@@ -20,7 +20,7 @@ export default defineConfig({
     // Keycloak call. Without this, CI fails on every such test — there is no
     // .env file there, and .env is gitignored, so it never reaches the runner.
     env: {
-      VITE_API_URL: 'http://localhost:3333/sistema-de-iniciativas-cin/api',
+      VITE_API_URL: 'http://localhost:3333/sistema-de-iniciativas-cin/api/v1',
       VITE_KEYCLOAK_JSON:
         '{"realm":"test","auth-server-url":"http://localhost/auth/","ssl-required":"external","resource":"sistema-de-iniciativas-cin-front-test","public-client":true,"confidential-port":0}',
     },

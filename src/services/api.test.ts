@@ -1,9 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import {
+  ApiError,
   fetchApi,
   getApiErrorMessage,
+  readData,
   setAuthToken,
   setRefreshTokenFn,
+  toApiError,
 } from './api'
 
 describe('getApiErrorMessage', () => {
@@ -30,6 +33,64 @@ describe('getApiErrorMessage', () => {
   it('usa o fallback quando o corpo está vazio', async () => {
     const res = new Response('', { status: 500 })
     expect(await getApiErrorMessage(res, 'fallback')).toBe('fallback')
+  })
+})
+
+describe('Problem Details do backend', () => {
+  const problem = (status: number, body: object) =>
+    new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/problem+json' } })
+
+  it('getApiErrorMessage prefere o detail do Problem Details', async () => {
+    const res = problem(409, { status: 409, code: 'CONFLICT', detail: 'A decisão já foi registrada.' })
+    expect(await getApiErrorMessage(res, 'fallback')).toBe('A decisão já foi registrada.')
+  })
+
+  it('toApiError preserva status, código e erros por campo (422)', async () => {
+    const res = problem(422, {
+      status: 422,
+      code: 'VALIDATION_FAILED',
+      detail: 'Um ou mais campos precisam ser corrigidos.',
+      errors: { titulo: ['String must contain at least 1 character(s)'] },
+    })
+    const err = await toApiError(res, 'fallback')
+    expect(err).toBeInstanceOf(ApiError)
+    expect(err.status).toBe(422)
+    expect(err.code).toBe('VALIDATION_FAILED')
+    expect(err.message).toBe('Um ou mais campos precisam ser corrigidos.')
+    expect(err.fieldErrors).toEqual({ titulo: ['String must contain at least 1 character(s)'] })
+  })
+
+  it('toApiError funciona com corpo que não é JSON', async () => {
+    const err = await toApiError(new Response('boom', { status: 502 }), 'fallback')
+    expect(err.status).toBe(502)
+    expect(err.message).toBe('boom')
+    expect(err.fieldErrors).toBeUndefined()
+  })
+})
+
+describe('readData', () => {
+  it('desembrulha o envelope { data }', async () => {
+    const res = new Response(
+      JSON.stringify({ statusCode: 200, timestamp: 't', path: '/x', data: { id: '1' } }),
+      { status: 200 },
+    )
+    expect(await readData<{ id: string }>(res, 'fallback')).toEqual({ id: '1' })
+  })
+
+  it('devolve undefined em 204', async () => {
+    expect(await readData(new Response(null, { status: 204 }), 'fallback')).toBeUndefined()
+  })
+
+  it('lança ApiError quando a resposta falhou', async () => {
+    const res = new Response(JSON.stringify({ detail: 'Acesso negado.', code: 'ACCESS_DENIED' }), {
+      status: 403,
+    })
+    await expect(readData(res, 'fallback')).rejects.toMatchObject({
+      name: 'ApiError',
+      status: 403,
+      code: 'ACCESS_DENIED',
+      message: 'Acesso negado.',
+    })
   })
 })
 

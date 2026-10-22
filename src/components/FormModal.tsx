@@ -17,8 +17,8 @@ interface FormModalProps {
 
 /**
  * Casca compartilhada dos modais de formulário (overlay + fechar ao clicar
- * fora + header com título/X + footer com Cancelar/Submit). Extraída de
- * `MemberModal` e `TodoModal`, que só diferem nos campos do corpo.
+ * fora + header com título/X + footer com Cancelar/Submit). Compartilhada entre
+ * os modais de formulário, que só diferem nos campos do corpo.
  */
 export function FormModal({
   isOpen,

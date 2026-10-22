@@ -6,10 +6,17 @@ import PageCin from './components/PageCin';
 import ForbiddenPageCin from './components/ForbiddenPageCin';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ErrorScreen, httpErrors } from '@cincoders/cinnamon';
-import { ALL_ROLES, Links, Roles } from './utils/enums';
-import TodosPage from './pages/todos';
-import TeamPage from './pages/team';
+import { ALL_ROLES, COMITE_ROLES, Links } from './utils/enums';
+import InicioPage from './pages/inicio';
 import LoginPage from './pages/login';
+import SubmeterPage from './pages/submeter';
+import DetalhePage from './pages/detalhe';
+import EditarPage from './pages/editar';
+import MinhasPage from './pages/minhas';
+import AprovadasPage from './pages/aprovadas';
+import CalendarioPage from './pages/calendario';
+import AnalisePage from './pages/analise';
+import PrivacidadePage from './pages/privacidade';
 
 /**
  * Error boundary de nível de rota: um erro de renderização numa página mostra a
@@ -106,12 +113,12 @@ function RouteMap() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
-        {/* Rota raiz /: se autenticado vai para /todos, caso contrário exibe tela de login */}
+        {/* Rota raiz /: se autenticado vai para /inicio, caso contrário exibe tela de login */}
         <Route
           path={Links.HOME}
           element={
             auth.isAuthenticated ? (
-              <Navigate to={Links.TODOS} replace />
+              <Navigate to={Links.INICIO} replace />
             ) : (
               <LoginPage auth={auth} />
             )
@@ -125,18 +132,24 @@ function RouteMap() {
             RouteErrorBoundary isola falhas de renderização por página. */}
         <Route element={<PageCin auth={auth} permittedRoles={ALL_ROLES} />}>
           <Route element={<RouteErrorBoundary />}>
-            <Route path={Links.TODOS} element={<TodosPage />} />
+            <Route path={Links.INICIO} element={<InicioPage />} />
+            <Route path={Links.SUBMETER} element={<SubmeterPage />} />
+            <Route path={Links.DETALHE} element={<DetalhePage />} />
+            <Route path={Links.EDITAR} element={<EditarPage />} />
+            <Route path={Links.MINHAS} element={<MinhasPage />} />
+            <Route path={Links.APROVADAS} element={<AprovadasPage />} />
+            <Route path={Links.CALENDARIO} element={<CalendarioPage />} />
+            <Route path={Links.PRIVACIDADE} element={<PrivacidadePage />} />
             {/* Rota desconhecida: componente de erro pronto da cinnamon (404). */}
             <Route path="*" element={<ErrorScreen errorType={httpErrors.NOTFOUND_404} />} />
           </Route>
         </Route>
 
-        {/* Rotas de gerenciamento — só ADMIN. Mesma tela do CIn, mas com
-            `permittedRoles={[Roles.ADMIN]}`: quem não é ADMIN é redirecionado
-            para /forbidden pelo RequireAuth do cinnamon. */}
-        <Route element={<PageCin auth={auth} permittedRoles={[Roles.ADMIN]} />}>
+        {/* Fila de análise: só comitê e administrador. Quem não tem a role é
+            redirecionado para /forbidden pelo RequireAuth do cinnamon. */}
+        <Route element={<PageCin auth={auth} permittedRoles={COMITE_ROLES} />}>
           <Route element={<RouteErrorBoundary />}>
-            <Route path={Links.TEAM} element={<TeamPage />} />
+            <Route path={Links.ANALISE} element={<AnalisePage />} />
           </Route>
         </Route>
       </Routes>

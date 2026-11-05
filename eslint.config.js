@@ -6,7 +6,8 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // docs-site é um projeto Next.js separado, com as próprias dependências e regras.
+  globalIgnores(['dist', 'docs-site']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

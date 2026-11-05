@@ -127,18 +127,57 @@ export const fetchApi = async (input: RequestInfo | URL, init?: RequestInit) => 
   return response;
 };
 
+/** Corpo de erro do backend: Problem Details (RFC 7807) com `errors` por campo na validação. */
+interface ProblemDetails {
+  status?: number;
+  code?: string;
+  detail?: string;
+  message?: string | string[];
+  error?: string;
+  errors?: Record<string, string[]>;
+}
+
+/** Erro lançado quando o backend responde com falha, já com a mensagem pronta para a tela. */
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly code?: string,
+    /** Erros por campo (422), no formato `{ campo: [mensagens] }`. */
+    readonly fieldErrors?: Record<string, string[]>,
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
+/** Envelope aplicado a toda resposta de sucesso pelo TransformInterceptor do backend. */
+export interface ApiEnvelope<T> {
+  statusCode: number;
+  timestamp: string;
+  path: string;
+  data: T;
+}
+
+/** Formato de resposta paginada do backend (ver PaginatedResponseDto). */
+export interface Paginated<T> {
+  items: T[];
+  meta: { page: number; limit: number; total: number; totalPages: number };
+}
+
 /**
- * Extrai a mensagem de erro real do corpo de uma resposta HTTP com falha
- * (formato do NestJS: { message: string | string[] }), com fallback para
- * texto puro ou uma mensagem padrão.
+ * Extrai a mensagem de erro real do corpo de uma resposta HTTP com falha.
+ * Prefere o `detail` do Problem Details do backend; aceita também o formato antigo do
+ * NestJS (`{ message: string | string[] }`), com fallback para texto puro ou uma
+ * mensagem padrão.
  */
 export const getApiErrorMessage = async (
   response: Response,
   fallback: string,
 ): Promise<string> => {
   try {
-    const data = await response.clone().json();
-    const msg = data?.message ?? data?.error;
+    const data = (await response.clone().json()) as ProblemDetails;
+    const msg = data?.detail ?? data?.message ?? data?.error;
     if (Array.isArray(msg)) return msg.filter(Boolean).join(', ');
     if (typeof msg === 'string' && msg.trim()) return msg;
   } catch {
@@ -153,4 +192,35 @@ export const getApiErrorMessage = async (
   }
 
   return fallback;
+};
+
+/** Converte uma resposta com falha em `ApiError`, preservando status, código e erros por campo. */
+export const toApiError = async (response: Response, fallback: string): Promise<ApiError> => {
+  const message = await getApiErrorMessage(response, fallback);
+  let code: string | undefined;
+  let fieldErrors: Record<string, string[]> | undefined;
+  try {
+    const data = (await response.clone().json()) as ProblemDetails;
+    code = data?.code;
+    fieldErrors = data?.errors;
+  } catch {
+    // corpo não é JSON
+  }
+  return new ApiError(message, response.status, code, fieldErrors);
+};
+
+/**
+ * Lê o corpo de uma resposta de sucesso desembrulhando o envelope `{ data }`.
+ * Se a resposta falhou, lança `ApiError`. É o único ponto que conhece o envelope:
+ * os `*.api.ts` dos módulos usam isto em vez de repetir o desembrulho.
+ */
+export const readData = async <T>(response: Response, fallback: string): Promise<T> => {
+  if (!response.ok) {
+    throw await toApiError(response, fallback);
+  }
+  if (response.status === 204) {
+    return undefined as T;
+  }
+  const envelope = (await response.json()) as ApiEnvelope<T>;
+  return envelope.data;
 };

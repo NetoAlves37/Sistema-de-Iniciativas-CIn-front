@@ -1,11 +1,19 @@
 import { type SidebarData } from '@cincoders/cinnamon';
-import { ListChecks, Users } from 'lucide-react';
+import {
+  CalendarDays,
+  CheckCircle2,
+  ClipboardCheck,
+  FolderOpen,
+  Home,
+  PlusCircle,
+} from 'lucide-react';
 import { Links } from './enums';
 import cincodersLogo from '../assets/icons/logo_cincoders-icon.svg';
 
 /**
  * Conteúdo da sidebar (Drawer aberto pelo botão de menu do Navbar).
  * `navMain` fica sempre visível; `navGroups` são seções colapsáveis.
+ * Itens exclusivos do comitê estão em `COMITE_ONLY_LINKS` (`utils/enums.ts`).
  */
 export const sidebar: SidebarData = {
   appName: 'Sistema de Iniciativas CIn',
@@ -14,19 +22,26 @@ export const sidebar: SidebarData = {
   // jeito que `cin-logo.svg` em pages/login.
   appLogoSrc: cincodersLogo,
   navMain: [
+    { id: 'inicio', title: 'Início', href: Links.INICIO, IconComponent: Home },
     {
-      id: 'todos',
-      title: 'Tarefas de Exemplo',
-      href: Links.TODOS,
-      IconComponent: ListChecks,
+      id: 'submeter',
+      title: 'Submeter Iniciativa',
+      href: Links.SUBMETER,
+      IconComponent: PlusCircle,
     },
+    { id: 'minhas', title: 'Minhas Iniciativas', href: Links.MINHAS, IconComponent: FolderOpen },
     {
-      // Só ADMIN vê este item: `Links.TEAM` está em `ADMIN_ONLY_LINKS` e o
-      // `PageCin` filtra o menu por isso. A rota em si também exige a role.
-      id: 'team',
-      title: 'Gerenciar Equipe',
-      href: Links.TEAM,
-      IconComponent: Users,
+      id: 'aprovadas',
+      title: 'Iniciativas aprovadas',
+      href: Links.APROVADAS,
+      IconComponent: CheckCircle2,
+    },
+    { id: 'calendario', title: 'Calendário', href: Links.CALENDARIO, IconComponent: CalendarDays },
+    {
+      id: 'analise',
+      title: 'Iniciativas em análise',
+      href: Links.ANALISE,
+      IconComponent: ClipboardCheck,
     },
   ],
 };

@@ -5,14 +5,6 @@ const withMDX = createMDX();
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
-  async rewrites() {
-    return [
-      {
-        source: '/docs/:path*.mdx',
-        destination: '/llms.mdx/docs/:path*',
-      },
-    ];
-  },
   async redirects() {
     return [
       // ============================================================
@@ -101,11 +93,6 @@ const config = {
       {
         source: '/users/documents/email-preferences',
         destination: '/docs/users/organisations/preferences/email',
-        permanent: true,
-      },
-      {
-        source: '/users/documents/ai-detection',
-        destination: '/docs/users/documents/advanced/ai-detection',
         permanent: true,
       },
       {
@@ -210,11 +197,6 @@ const config = {
       {
         source: '/developers/self-hosting/telemetry',
         destination: '/docs/self-hosting/configuration/telemetry',
-        permanent: true,
-      },
-      {
-        source: '/developers/self-hosting/ai-features',
-        destination: '/docs/self-hosting/configuration/advanced/ai-features',
         permanent: true,
       },
 
@@ -443,11 +425,6 @@ const config = {
       {
         source: '/self-hosting/configuration/advanced/oauth-providers',
         destination: '/docs/self-hosting/configuration/advanced/oauth-providers',
-        permanent: true,
-      },
-      {
-        source: '/self-hosting/configuration/advanced/ai-features',
-        destination: '/docs/self-hosting/configuration/advanced/ai-features',
         permanent: true,
       },
       {

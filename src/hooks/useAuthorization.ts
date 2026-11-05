@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useAuth } from 'react-oidc-context';
 import type { User } from 'oidc-client-ts';
-import { Roles } from '../utils/enums';
+import { COMITE_ROLES, Roles } from '../utils/enums';
 
 /** Decodifica o payload (base64url) de um JWT sem dependência externa. */
 function decodeJwtPayload(token: string): Record<string, unknown> | null {
@@ -50,11 +50,8 @@ export interface Authorization {
   /** True se o usuário tem ao menos uma das roles informadas. */
   hasRole: (...roles: Roles[]) => boolean;
   isAdmin: boolean;
-  /**
-   * Usuário sem privilégio de escrita. Derivado, e não lido de uma
-   * role própria: `sys_sistema-de-iniciativas-cin-guest` não existe no Keycloak.
-   */
-  isReadOnly: boolean;
+  /** Membro do comitê ou administrador: acessa a fila de análise e decide. */
+  isComite: boolean;
 }
 
 /**
@@ -76,7 +73,7 @@ export function useAuthorization(): Authorization {
       roles,
       hasRole,
       isAdmin: hasRole(Roles.ADMIN),
-      isReadOnly: hasRole(Roles.USERS) && !hasRole(Roles.ADMIN),
+      isComite: hasRole(...COMITE_ROLES),
     };
     // Recalcula quando o token muda (login/refresh).
   }, [auth.user]);

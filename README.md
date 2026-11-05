@@ -10,7 +10,7 @@ Sistema de Iniciativas - CIn — React + Vite + TypeScript. Autenticação via K
 ## Setup
 
 ```bash
-cp .env.example .env      # já aponta para http://localhost:3000/sistema-de-iniciativas-cin/api em dev
+cp .env.example .env      # já aponta para http://localhost:3000/sistema-de-iniciativas-cin/api/v1 em dev
 npm install
 ```
 
@@ -30,7 +30,7 @@ npm test           # vitest run
 
 Veja [`.env.example`](./.env.example):
 
-- `VITE_API_URL` — URL da API (dev: `http://localhost:3000/sistema-de-iniciativas-cin/api`).
+- `VITE_API_URL` — URL da API **já com a versão `/v1`** (dev: `http://localhost:3000/sistema-de-iniciativas-cin/api/v1`). Em produção, o `API_URL` do container segue a mesma regra.
 - `VITE_KEYCLOAK_JSON` — configuração do client Keycloak.
 - `VITE_BASE_URL` — base path público da aplicação.
 
@@ -39,12 +39,11 @@ Veja [`.env.example`](./.env.example):
 ```
 src/
 ├── app/             # provedores globais (AppProvider) e composição da aplicação
-├── modules/         # um diretório por domínio: página, hook, service e types juntos
-│   ├── todos/       # módulo de exemplo (gabarito) — aberto a qualquer usuário, ações com <Can>
-│   └── team/        # módulo de gerenciamento — rota restrita ao ADMIN (permittedRoles)
-├── pages/           # telas fora de um módulo de domínio (ex: login)
+├── modules/         # um diretório por domínio: api, hooks, types e componentes juntos
+│   └── identidade/  # usuário autenticado (GET /me: id, nome e perfil)
+├── pages/           # uma pasta por rota (login, inicio, ...)
 ├── components/      # componentes compartilhados (ErrorBoundary, Can, layout)
-├── services/        # cliente HTTP compartilhado (fetchApi, token/refresh)
+├── services/        # cliente HTTP compartilhado (fetchApi, readData, ApiError)
 ├── hooks/           # hooks compartilhados (useAsync, useAuthorization)
 ├── lib/             # utils genéricos
 ├── config/          # env
@@ -54,31 +53,36 @@ src/
 O código flui numa direção só: **compartilhado → módulo → app**. Um módulo nunca
 importa de outro; a composição acontece em `app/` e `routes.tsx`.
 
-### Anatomia de um módulo (`src/modules/todos/`)
+O domínio de iniciativas está sendo implementado por fases (ver `docs/PLANO.md` na raiz do
+projeto). Os módulos de exemplo do boilerplate (`todos` e `team`) foram removidos.
 
-| Arquivo             | Papel                                                        |
-| ------------------- | ----------------------------------------------------------- |
-| `todos.page.tsx`    | A tela. Só orquestra: estado de UI, permissões, render.     |
-| `useTodos.ts`       | Estado de cache do servidor + mutações, sobre `useAsync`.   |
-| `todo.service.ts`   | Chamadas HTTP ao backend, via `fetchApi`.                   |
-| `todo.types.ts`     | Types e o schema `zod` do formulário.                       |
-| `TodoModal.tsx`     | Formulário (react-hook-form + zod).                         |
+### Anatomia de um módulo (`src/modules/identidade/`)
 
-Para criar o módulo do seu domínio, copie a pasta `todos/`, renomeie os
-arquivos e ajuste os types.
+| Arquivo             | Papel                                                                   |
+| ------------------- | ----------------------------------------------------------------------- |
+| `*.types.ts`        | Tipos que espelham o contrato HTTP do backend.                          |
+| `*.api.ts`          | **Único** lugar que chama `fetchApi` para o módulo; usa `readData`.     |
+| `use*.ts`           | Estado do servidor + mutações, sobre `useAsync`.                        |
+| `components/`       | Componentes de apresentação, sem acesso à API.                          |
+
+Páginas e componentes não chamam `fetchApi` diretamente: usam os hooks, e os hooks usam o `*.api.ts`.
+
+### Respostas e erros da API
+
+`readData<T>(response, mensagemPadrão)` (`src/services/api.ts`) é o único ponto que conhece o
+envelope `{ statusCode, timestamp, path, data }`. Em falha lança `ApiError`, com `status`, `code`
+e `fieldErrors` (erros por campo do 422), lidos do Problem Details do backend.
 
 ### Controle de acesso: dois níveis
 
-| Onde                        | Como                                              | Exemplo          |
-| --------------------------- | ------------------------------------------------ | ---------------- |
-| Página inteira              | `permittedRoles` na rota (`routes.tsx`)          | `team` (só ADMIN) |
-| Botão / ação dentro da tela | `<Can roles={[...]}>` (`components/auth/Can.tsx`) | `todos` (escrita) |
+| Onde                        | Como                                              | Exemplo                |
+| --------------------------- | ------------------------------------------------ | ---------------------- |
+| Página inteira              | `permittedRoles` na rota (`routes.tsx`)          | `/analise` (só comitê) |
+| Botão / ação dentro da tela | `<Can roles={[...]}>` (`components/auth/Can.tsx`) | decidir iniciativa     |
 
-O módulo `todos` é aberto a qualquer usuário autenticado e usa `<Can>` para
-esconder os botões de escrita. O módulo `team` é uma tela de gerenciamento: a
-rota exige `Roles.ADMIN`, o link está em `ADMIN_ONLY_LINKS` (some do menu para
-os demais), e por isso a página nem precisa de `<Can>`. Os dois são só UX — o
-backend valida a role de novo em cada endpoint.
+Roles (`utils/enums.ts`): `USERS` (acesso padrão), `COMITE` (comitê avaliador) e `ADMIN`
+(administrador da aplicação, que **não** decide iniciativas). Itens do menu restritos a certas
+roles ficam em `LINK_ROLES`. Tudo isso é só UX: o backend valida a role de novo em cada endpoint.
 
 ### Tratamento de erro de renderização
 

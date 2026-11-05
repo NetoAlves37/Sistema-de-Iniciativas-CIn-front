@@ -181,3 +181,135 @@ button[aria-label="Exportar"] {
 .w-72.max-h-\[80vh\] .mx-2 {
   margin-inline: calc(var(--spacing) * 2);
 }
+/* ---------------------------------------------------------------------------
+ * Cores do Sistema de Iniciativas (portadas do protótipo).
+ * Status e tipos têm contraste mínimo de 4,5:1 entre fundo e texto.
+ * ------------------------------------------------------------------------- */
+:root {
+  --st-andamento-bg: #f4d03f;
+  --st-andamento-fg: #231f20;
+  --st-votacao-bg: #a60f28;
+  --st-votacao-fg: #ffffff;
+  --st-analise-bg: #f2a91b;
+  --st-analise-fg: #231f20;
+  --st-aprovada-bg: #147a37;
+  --st-aprovada-fg: #ffffff;
+  --st-reprovada-bg: #d91f2f;
+  --st-reprovada-fg: #ffffff;
+
+  --tp-ext-bg: #9be0a0;
+  --tp-pes-bg: #a7c7f2;
+  --tp-evt-bg: #f7ae85;
+  --tp-fg: #231f20;
+}
+
+.dark {
+  --tp-ext-bg: #2f6b3a;
+  --tp-pes-bg: #2e4c75;
+  --tp-evt-bg: #7a4027;
+  --tp-fg: #ffffff;
+}
+
+/* ---------------------------------------------------------------------------
+ * Calendário (FullCalendar): cores por tipo, as mesmas do protótipo, e ajustes de tema.
+ * ------------------------------------------------------------------------- */
+.gcal-main .fc {
+  --fc-border-color: var(--border);
+  --fc-page-bg-color: var(--card);
+  --fc-neutral-bg-color: var(--muted);
+  --fc-list-event-hover-bg-color: var(--muted);
+  --fc-today-bg-color: transparent;
+  --fc-now-indicator-color: #a60f28;
+  --fc-button-bg-color: var(--card);
+  --fc-button-border-color: var(--input);
+  --fc-button-text-color: var(--foreground);
+  --fc-button-hover-bg-color: var(--muted);
+  --fc-button-hover-border-color: var(--input);
+  --fc-button-active-bg-color: #a60f28;
+  --fc-button-active-border-color: #a60f28;
+  font-size: 0.9rem;
+}
+.gcal-main .fc .fc-toolbar {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.gcal-main .fc .fc-toolbar-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  margin-left: 8px;
+}
+.gcal-main .fc .fc-button {
+  border-radius: 4px;
+  font-weight: 600;
+  box-shadow: none;
+  text-transform: none;
+}
+.gcal-main .fc .fc-button-primary:not(:disabled).fc-button-active {
+  color: #fff;
+}
+.gcal-main .fc .fc-today-button {
+  background: #a60f28;
+  border-color: #a60f28;
+  color: #fff;
+}
+.gcal-main .fc .fc-today-button:disabled {
+  opacity: 0.55;
+}
+.gcal-main .fc .fc-col-header-cell-cushion {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  padding: 6px 4px;
+}
+.gcal-main .fc a {
+  color: inherit;
+}
+.gcal-main .fc .fc-event {
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 1px 2px;
+}
+.gcal-main .fc .fc-event .fc-event-main,
+.gcal-main .fc .fc-event .fc-event-time,
+.gcal-main .fc .fc-event .fc-event-title {
+  color: var(--tp-fg);
+  font-weight: 600;
+}
+.gcal-main .fc .fc-tp-ext {
+  background: var(--tp-ext-bg);
+}
+.gcal-main .fc .fc-tp-pes {
+  background: var(--tp-pes-bg);
+}
+.gcal-main .fc .fc-tp-evt {
+  background: var(--tp-evt-bg);
+}
+.gcal-main .fc .fc-list-event.fc-event {
+  background: transparent;
+}
+.gcal-main .fc .fc-list-event .fc-event-title,
+.gcal-main .fc .fc-list-event .fc-event-time {
+  color: var(--foreground);
+  font-weight: 500;
+}
+.gcal-main .fc .fc-tp-ext .fc-list-event-dot {
+  border-color: var(--tp-ext-bg);
+}
+.gcal-main .fc .fc-tp-pes .fc-list-event-dot {
+  border-color: var(--tp-pes-bg);
+}
+.gcal-main .fc .fc-tp-evt .fc-list-event-dot {
+  border-color: var(--tp-evt-bg);
+}
+@media (max-width: 560px) {
+  .ev-pop {
+    left: 12px !important;
+    right: 12px;
+    top: auto !important;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    width: auto;
+    max-width: none;
+  }
+}

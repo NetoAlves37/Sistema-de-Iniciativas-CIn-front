@@ -15,7 +15,7 @@ import {
   httpErrors,
 } from '@cincoders/cinnamon';
 import { EmptyState } from '../../components/EmptyState';
-import { MiniVotes } from '../../modules/iniciativas/components/MiniVotes';
+import { MiniVotos } from '../../modules/votacao/components/MiniVotos';
 import { StatusBadge } from '../../modules/iniciativas/components/StatusBadge';
 import { TipoChip } from '../../modules/iniciativas/components/TipoChip';
 import type { StatusIniciativa } from '../../modules/iniciativas/iniciativas.types';
@@ -175,7 +175,7 @@ export default function MinhasPage() {
                   </TableCell>
                   <TableCell>{proximoPasso(iniciativa)}</TableCell>
                   <TableCell>
-                    <MiniVotes
+                    <MiniVotos
                       likes={iniciativa.votos.likes}
                       dislikes={iniciativa.votos.dislikes}
                     />

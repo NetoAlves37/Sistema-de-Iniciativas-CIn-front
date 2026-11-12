@@ -4,7 +4,7 @@ import { linkDetalhe } from '../../../utils/enums';
 import type { ResumoIniciativa } from '../iniciativas.types';
 import { restanteAte } from '../../compartilhado/prazo';
 import { CLASSE_TIPO } from '../rotulos';
-import { MiniVotes } from './MiniVotes';
+import { MiniVotos } from '../../votacao/components/MiniVotos';
 import { StatusBadge } from './StatusBadge';
 import { TipoChip } from './TipoChip';
 
@@ -68,7 +68,7 @@ export function IniciativaRow({
       <span className="flex flex-col items-end gap-2 text-sm text-gray-700 dark:text-gray-300">
         {mostrarStatus && <StatusBadge status={iniciativa.status} />}
         {mostrarVotos && (
-          <MiniVotes likes={iniciativa.votos.likes} dislikes={iniciativa.votos.dislikes} />
+          <MiniVotos likes={iniciativa.votos.likes} dislikes={iniciativa.votos.dislikes} />
         )}
         {restante && (
           <span>

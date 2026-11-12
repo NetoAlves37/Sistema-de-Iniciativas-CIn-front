@@ -1,7 +1,13 @@
 import { Fragment, useState } from 'react';
-import { PERFIL_LABELS } from '../../identidade/me.types';
-import { BTN_PRIMARIO, CLASSE_CAMPO, CLASSE_CARTAO, CLASSE_ERRO, CLASSE_TITULO_SECAO } from '../../compartilhado/estilos';
-import { fmtInstante } from '../../compartilhado/prazo';
+import { PERFIL_LABELS } from '../../identidade';
+import {
+  BTN_PRIMARIO,
+  CLASSE_CAMPO,
+  CLASSE_CARTAO,
+  CLASSE_ERRO,
+  CLASSE_TITULO_SECAO,
+  fmtInstante,
+} from '../../compartilhado';
 import type { Comentario } from '../refinamento.types';
 
 export const LIMITE_SUGESTAO = 1000;

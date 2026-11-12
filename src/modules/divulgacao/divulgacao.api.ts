@@ -1,6 +1,6 @@
 import { API_URL, fetchApi, readData, type Paginated } from '../../services/api';
 import { montarQuery } from '../../services/query';
-import type { ResumoIniciativa, TipoIniciativa } from '../iniciativas/iniciativas.types';
+import type { ResumoIniciativa, TipoIniciativa } from '../iniciativas';
 import type { FiltroOcorrencias, Ocorrencia } from './divulgacao.types';
 
 /** Único lugar que chama o backend para a divulgação (aprovadas e calendário). */

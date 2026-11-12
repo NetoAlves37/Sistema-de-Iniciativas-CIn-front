@@ -1,22 +1,26 @@
 import { ArrowLeft } from 'lucide-react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useDecisao } from '../../modules/avaliacao/useDecisao';
-import { PainelDecisao } from '../../modules/avaliacao/components/PainelDecisao';
-import { PERFIL_LABELS } from '../../modules/identidade/me.types';
-import { useMe } from '../../modules/identidade/MeProvider';
-import { CalloutStatus } from '../../modules/iniciativas/components/CalloutStatus';
-import { DadosIniciativa } from '../../modules/iniciativas/components/DadosIniciativa';
-import { HistoricoStatus } from '../../modules/iniciativas/components/HistoricoStatus';
-import { NadaPorAqui } from '../../modules/iniciativas/components/NadaPorAqui';
-import { Stepper } from '../../modules/iniciativas/components/Stepper';
-import { StatusBadge } from '../../modules/iniciativas/components/StatusBadge';
-import { TipoChip } from '../../modules/iniciativas/components/TipoChip';
-import { BTN_PRIMARIO, BTN_SECUNDARIO, CLASSE_CARTAO, CLASSE_TITULO_SECAO } from '../../modules/compartilhado/estilos';
-import { useHistorico, useIniciativa } from '../../modules/iniciativas/useIniciativa';
-import { PainelSugestoes } from '../../modules/refinamento/components/PainelSugestoes';
-import { useComentarios } from '../../modules/refinamento/useComentarios';
-import { PainelVotos } from '../../modules/votacao/components/PainelVotos';
-import { painelVotosVisivel, useVoto } from '../../modules/votacao/useVoto';
+import { PainelDecisao, useDecisao } from '../../modules/avaliacao';
+import { PERFIL_LABELS, useMe } from '../../modules/identidade';
+import {
+  CalloutStatus,
+  DadosIniciativa,
+  HistoricoStatus,
+  NadaPorAqui,
+  StatusBadge,
+  Stepper,
+  TipoChip,
+  useHistorico,
+  useIniciativa,
+} from '../../modules/iniciativas';
+import {
+  BTN_PRIMARIO,
+  BTN_SECUNDARIO,
+  CLASSE_CARTAO,
+  CLASSE_TITULO_SECAO,
+} from '../../modules/compartilhado';
+import { PainelSugestoes, useComentarios } from '../../modules/refinamento';
+import { PainelVotos, painelVotosVisivel, useVoto } from '../../modules/votacao';
 import { Links, linkEditar } from '../../utils/enums';
 
 /** `/iniciativas/:id`: situação, dados, decisão do comitê, votos, sugestões e histórico. */

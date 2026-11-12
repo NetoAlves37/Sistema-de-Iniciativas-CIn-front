@@ -1,6 +1,6 @@
 import { iniciativasApi, type PaginaMinhas } from './iniciativas.api';
 import type { ContagemPorStatus, ResumoIniciativa, StatusIniciativa } from './iniciativas.types';
-import { useListaPaginada, type OpcoesPaginacao } from '../compartilhado/useListaPaginada';
+import { type OpcoesPaginacao, useListaPaginada } from '../compartilhado';
 
 /** Soma das contagens por status: é o "N" do chip "Todas (N)". */
 export function totalDasContagens(contagem: ContagemPorStatus | undefined): number {

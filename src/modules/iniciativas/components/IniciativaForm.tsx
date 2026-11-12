@@ -13,7 +13,13 @@ import {
   VALORES_NOVA,
   type IniciativaFormValues,
 } from '../iniciativa.schema';
-import { BTN_PRIMARIO, BTN_SECUNDARIO, CLASSE_AJUDA, CLASSE_CAMPO, CLASSE_ERRO } from '../../compartilhado/estilos';
+import {
+  BTN_PRIMARIO,
+  BTN_SECUNDARIO,
+  CLASSE_AJUDA,
+  CLASSE_CAMPO,
+  CLASSE_ERRO,
+} from '../../compartilhado';
 import type { DadosIniciativaInput } from '../iniciativas.types';
 import { PERIODICIDADES, ROTULO_PERIODICIDADE, ROTULO_TIPO, TIPOS } from '../rotulos';
 

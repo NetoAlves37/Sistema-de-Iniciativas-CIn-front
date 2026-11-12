@@ -1,4 +1,4 @@
-import type { Autor } from '../iniciativas/iniciativas.types';
+import type { Autor } from '../iniciativas';
 
 export interface Comentario {
   id: string;

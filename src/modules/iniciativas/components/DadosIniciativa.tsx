@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import type { DetalheIniciativa } from '../iniciativas.types';
-import { fmtPeriodo } from '../../compartilhado/prazo';
+import { fmtPeriodo } from '../../compartilhado';
 import { ROTULO_PERIODICIDADE, ROTULO_TIPO } from '../rotulos';
 
 function Campo({ rotulo, children, largo }: { rotulo: string; children: ReactNode; largo?: boolean }) {

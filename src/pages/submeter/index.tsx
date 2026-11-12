@@ -1,9 +1,11 @@
 import { toast } from '@cincoders/cinnamon';
 import { useNavigate } from 'react-router-dom';
-import { useMe } from '../../modules/identidade/MeProvider';
-import { IniciativaForm } from '../../modules/iniciativas/components/IniciativaForm';
-import type { DadosIniciativaInput } from '../../modules/iniciativas/iniciativas.types';
-import { useCriarIniciativa } from '../../modules/iniciativas/useAcoesIniciativa';
+import { useMe } from '../../modules/identidade';
+import {
+  type DadosIniciativaInput,
+  IniciativaForm,
+  useCriarIniciativa,
+} from '../../modules/iniciativas';
 import { linkDetalhe } from '../../utils/enums';
 
 /** `/iniciativas/nova`: submissão direta (sem rascunho e sem fotos). */

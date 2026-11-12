@@ -15,12 +15,16 @@ import {
   httpErrors,
 } from '@cincoders/cinnamon';
 import { EmptyState } from '../../components/EmptyState';
-import { MiniVotos } from '../../modules/votacao/components/MiniVotos';
-import { StatusBadge } from '../../modules/iniciativas/components/StatusBadge';
-import { TipoChip } from '../../modules/iniciativas/components/TipoChip';
-import type { StatusIniciativa } from '../../modules/iniciativas/iniciativas.types';
-import { ROTULO_STATUS, STATUS_ORDEM } from '../../modules/iniciativas/rotulos';
-import { totalDasContagens, useMinhas } from '../../modules/iniciativas/useMinhas';
+import { MiniVotos } from '../../modules/votacao';
+import {
+  ROTULO_STATUS,
+  STATUS_ORDEM,
+  StatusBadge,
+  type StatusIniciativa,
+  TipoChip,
+  totalDasContagens,
+  useMinhas,
+} from '../../modules/iniciativas';
 import { Links, linkDetalhe, linkEditar } from '../../utils/enums';
 import { podeEditarNaLista, proximoPasso } from './proximoPasso';
 

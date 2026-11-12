@@ -1,4 +1,4 @@
-import { useListaPaginada, type OpcoesPaginacao } from '../compartilhado/useListaPaginada';
+import { type OpcoesPaginacao, useListaPaginada } from '../compartilhado';
 import { iniciativasApi } from './iniciativas.api';
 import type { OrdenacaoIniciativas, ResumoIniciativa, StatusIniciativa } from './iniciativas.types';
 

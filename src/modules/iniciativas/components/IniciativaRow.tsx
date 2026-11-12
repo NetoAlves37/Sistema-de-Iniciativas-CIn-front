@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { linkDetalhe } from '../../../utils/enums';
 import type { ResumoIniciativa } from '../iniciativas.types';
-import { restanteAte } from '../../compartilhado/prazo';
+import { restanteAte } from '../../compartilhado';
 import { CLASSE_TIPO } from '../rotulos';
-import { MiniVotos } from '../../votacao/components/MiniVotos';
+import { MiniVotos } from '../../votacao';
 import { StatusBadge } from './StatusBadge';
 import { TipoChip } from './TipoChip';
 

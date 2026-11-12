@@ -1,10 +1,12 @@
 import { RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { IniciativaRow } from '../../modules/iniciativas/components/IniciativaRow';
-import type { OrdenacaoIniciativas, StatusIniciativa } from '../../modules/iniciativas/iniciativas.types';
-import { PERFIL_LABELS } from '../../modules/identidade/me.types';
-import { useMe } from '../../modules/identidade/MeProvider';
-import { useIniciativas } from '../../modules/iniciativas/useIniciativas';
+import {
+  IniciativaRow,
+  type OrdenacaoIniciativas,
+  type StatusIniciativa,
+  useIniciativas,
+} from '../../modules/iniciativas';
+import { PERFIL_LABELS, useMe } from '../../modules/identidade';
 import { Links } from '../../utils/enums';
 
 const LIMITE_POR_SECAO = 10;

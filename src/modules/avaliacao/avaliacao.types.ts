@@ -1,4 +1,4 @@
-import type { ResumoIniciativa } from '../iniciativas/iniciativas.types';
+import type { ResumoIniciativa } from '../iniciativas';
 
 /** Item da fila de análise: o resumo mais a marca de conflito de interesse. */
 export interface ItemFila extends ResumoIniciativa {

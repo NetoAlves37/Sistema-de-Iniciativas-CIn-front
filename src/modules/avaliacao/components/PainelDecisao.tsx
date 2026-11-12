@@ -8,7 +8,7 @@ import {
   CLASSE_CARTAO,
   CLASSE_ERRO,
   CLASSE_TITULO_SECAO,
-} from '../../compartilhado/estilos';
+} from '../../compartilhado';
 
 export const LIMITE_JUSTIFICATIVA = 2000;
 const MENSAGEM_JUSTIFICATIVA = 'A justificativa é obrigatória para reprovar.';

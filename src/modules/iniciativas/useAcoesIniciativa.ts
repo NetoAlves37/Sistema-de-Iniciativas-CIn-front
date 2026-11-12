@@ -1,4 +1,4 @@
-import { type AcaoAssincrona, useAcao } from '../compartilhado/useAcao';
+import { type AcaoAssincrona, useAcao } from '../compartilhado';
 import { iniciativasApi } from './iniciativas.api';
 import type { DadosIniciativaInput, DetalheIniciativa } from './iniciativas.types';
 

@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
 import { linkDetalhe } from '../../../utils/enums';
-import type { ResumoIniciativa } from '../../iniciativas/iniciativas.types';
-import { TipoChip } from '../../iniciativas/components/TipoChip';
-import { fmtPeriodo } from '../../compartilhado/prazo';
-import { CLASSE_TIPO, ROTULO_PERIODICIDADE } from '../../iniciativas/rotulos';
+import {
+  CLASSE_TIPO,
+  type ResumoIniciativa,
+  ROTULO_PERIODICIDADE,
+  TipoChip,
+} from '../../iniciativas';
+import { fmtPeriodo } from '../../compartilhado';
 
 /** Cartão de iniciativa aprovada: capa colorida pelo tipo com a inicial do título. */
 export function CartaoAprovada({ iniciativa }: { iniciativa: ResumoIniciativa }) {

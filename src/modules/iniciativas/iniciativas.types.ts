@@ -1,4 +1,4 @@
-import type { Perfil } from '../identidade/me.types';
+import type { Perfil } from '../identidade';
 
 /**
  * Tipos que espelham o contrato HTTP do backend (docs/PROMPT.md, seção 3.10). Não importe

@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { fmtDia } from '../compartilhado/prazo';
-import { ROTULO_PERIODICIDADE } from '../iniciativas/rotulos';
+import { fmtDia } from '../compartilhado';
+import { ROTULO_PERIODICIDADE } from '../iniciativas';
 import type { Ocorrencia } from './divulgacao.types';
 
 /** `YYYY-MM-DD[...]` como data local (sem passar por UTC). */

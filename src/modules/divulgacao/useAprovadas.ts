@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useListaPaginada } from '../compartilhado/useListaPaginada';
-import type { ResumoIniciativa, TipoIniciativa } from '../iniciativas/iniciativas.types';
+import { useListaPaginada } from '../compartilhado';
+import type { ResumoIniciativa, TipoIniciativa } from '../iniciativas';
 import { divulgacaoApi } from './divulgacao.api';
 
 export const ATRASO_BUSCA_MS = 300;

@@ -1,6 +1,6 @@
 import { RefreshCw } from 'lucide-react';
-import { useFila } from '../../modules/avaliacao/useFila';
-import { IniciativaRow } from '../../modules/iniciativas/components/IniciativaRow';
+import { useFila } from '../../modules/avaliacao';
+import { IniciativaRow } from '../../modules/iniciativas';
 
 const CLASSE_TAG =
   'inline-block rounded-[3px] px-1.5 text-[0.72rem] font-bold';

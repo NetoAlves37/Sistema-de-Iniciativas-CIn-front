@@ -1,4 +1,4 @@
-import { useListaPaginada } from '../compartilhado/useListaPaginada';
+import { useListaPaginada } from '../compartilhado';
 import { avaliacaoApi } from './avaliacao.api';
 import type { ItemFila } from './avaliacao.types';
 

@@ -1,4 +1,4 @@
-import type { Periodicidade, TipoIniciativa } from '../iniciativas/iniciativas.types';
+import type { Periodicidade, TipoIniciativa } from '../iniciativas';
 
 /** Ocorrência de uma iniciativa aprovada no calendário (`GET /divulgacao/ocorrencias`). */
 export interface Ocorrencia {

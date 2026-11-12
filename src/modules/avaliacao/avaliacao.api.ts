@@ -1,6 +1,6 @@
 import { API_URL, fetchApi, readData, type Paginated } from '../../services/api';
 import { montarQuery } from '../../services/query';
-import type { DetalheIniciativa } from '../iniciativas/iniciativas.types';
+import type { DetalheIniciativa } from '../iniciativas';
 import type { DecisaoInput, ItemFila } from './avaliacao.types';
 
 /** Único lugar que chama o backend para a fila e a decisão do comitê. */

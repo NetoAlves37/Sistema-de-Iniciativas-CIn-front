@@ -1,14 +1,6 @@
 import { API_URL, fetchApi, readData, type Paginated } from '../../services/api';
 import { montarQuery } from '../../services/query';
-import type { Autor } from '../iniciativas/iniciativas.types';
-
-export interface Comentario {
-  id: string;
-  ciclo: number;
-  autor: Autor & { ehAutorDaIniciativa: boolean };
-  texto: string;
-  criadoEm: string;
-}
+import type { Comentario } from './refinamento.types';
 
 /** Único lugar que chama o backend para as sugestões (comentários) do refinamento. */
 export const comentariosApi = {

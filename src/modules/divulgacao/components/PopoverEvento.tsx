@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { linkDetalhe } from '../../../utils/enums';
 import { CLASSE_TIPO, ROTULO_TIPO } from '../../iniciativas/rotulos';
-import type { Ocorrencia } from '../divulgacao.api';
+import type { Ocorrencia } from '../divulgacao.types';
 import { quandoDaOcorrencia, repeticaoDaOcorrencia } from '../ocorrencias.format';
 
 interface PopoverEventoProps {

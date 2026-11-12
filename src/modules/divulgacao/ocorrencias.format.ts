@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { fmtDia } from '../compartilhado/prazo';
 import { ROTULO_PERIODICIDADE } from '../iniciativas/rotulos';
-import type { Ocorrencia } from './divulgacao.api';
+import type { Ocorrencia } from './divulgacao.types';
 
 /** `YYYY-MM-DD[...]` como data local (sem passar por UTC). */
 function diaLocal(texto: string): Date {

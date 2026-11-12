@@ -1,18 +1,7 @@
 import { API_URL, fetchApi, readData, type Paginated } from '../../services/api';
 import { montarQuery } from '../../services/query';
-import type { DetalheIniciativa, ResumoIniciativa } from '../iniciativas/iniciativas.types';
-
-/** Item da fila de análise: o resumo mais a marca de conflito de interesse. */
-export interface ItemFila extends ResumoIniciativa {
-  /** O usuário logado é o autor (não pode decidir sobre ela). */
-  souAutor: boolean;
-}
-
-export interface DecisaoInput {
-  resultado: 'APROVADA' | 'REPROVADA';
-  /** Obrigatória na reprovação (até 2000 caracteres). */
-  justificativa?: string;
-}
+import type { DetalheIniciativa } from '../iniciativas/iniciativas.types';
+import type { DecisaoInput, ItemFila } from './avaliacao.types';
 
 /** Único lugar que chama o backend para a fila e a decisão do comitê. */
 export const avaliacaoApi = {

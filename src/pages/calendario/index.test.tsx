@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
-import type { FiltroOcorrencias } from '../../modules/divulgacao/divulgacao.api';
+import type { FiltroOcorrencias } from '../../modules/divulgacao/divulgacao.types';
 import { ocorrencia } from '../../modules/divulgacao/divulgacao.fixtures';
 import CalendarioPage from './index';
 

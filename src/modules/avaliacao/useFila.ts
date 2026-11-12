@@ -1,5 +1,6 @@
 import { useListaPaginada } from '../compartilhado/useListaPaginada';
-import { avaliacaoApi, type ItemFila } from './avaliacao.api';
+import { avaliacaoApi } from './avaliacao.api';
+import type { ItemFila } from './avaliacao.types';
 
 /** `GET /avaliacao/fila` (só comitê e administrador), com "Ver mais". */
 export function useFila(limit = 20) {

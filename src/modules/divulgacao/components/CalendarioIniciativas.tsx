@@ -6,7 +6,7 @@ import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { intervaloDeDatas, type IntervaloCalendario } from '../useOcorrencias';
-import type { Ocorrencia } from '../divulgacao.api';
+import type { Ocorrencia } from '../divulgacao.types';
 
 const LARGURA_CELULAR = '(max-width: 640px)';
 

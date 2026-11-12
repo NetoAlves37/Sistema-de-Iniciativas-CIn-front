@@ -3,7 +3,8 @@ import { useCallback } from 'react';
 import { useAsync } from '../../hooks/useAsync';
 import { ApiError } from '../../services/api';
 import { useAcao } from '../compartilhado/useAcao';
-import { comentariosApi, type Comentario } from './comentarios.api';
+import { comentariosApi } from './comentarios.api';
+import type { Comentario } from './refinamento.types';
 
 interface OpcoesComentarios {
   /** Chamado em 403/409 (por exemplo, "A fase de sugestões terminou."), para recarregar o detalhe. */

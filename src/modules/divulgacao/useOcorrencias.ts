@@ -3,7 +3,8 @@ import { format } from 'date-fns';
 import { useAsync } from '../../hooks/useAsync';
 import type { TipoIniciativa } from '../iniciativas/iniciativas.types';
 import { TIPOS } from '../iniciativas/rotulos';
-import { divulgacaoApi, type Ocorrencia } from './divulgacao.api';
+import { divulgacaoApi } from './divulgacao.api';
+import type { Ocorrencia } from './divulgacao.types';
 
 /** Intervalo visível do calendário: `de` inclusivo e `ate` exclusivo, `YYYY-MM-DD`. */
 export interface IntervaloCalendario {

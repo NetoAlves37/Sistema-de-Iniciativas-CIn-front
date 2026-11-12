@@ -1,4 +1,4 @@
-import type { Ocorrencia } from './divulgacao.api';
+import type { Ocorrencia } from './divulgacao.types';
 
 /** Ocorrência semanal com horário, para os testes. */
 export const ocorrencia: Ocorrencia = {

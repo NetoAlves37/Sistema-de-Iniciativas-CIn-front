@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import type { Ocorrencia } from '../../modules/divulgacao/divulgacao.api';
+import type { Ocorrencia } from '../../modules/divulgacao/divulgacao.types';
 import { CalendarioIniciativas } from '../../modules/divulgacao/components/CalendarioIniciativas';
 import { PopoverEvento } from '../../modules/divulgacao/components/PopoverEvento';
 import {

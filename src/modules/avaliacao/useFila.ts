@@ -1,5 +1,6 @@
-import { useListaPaginada } from '../iniciativas/useIniciativas';
-import { avaliacaoApi, type ItemFila } from './avaliacao.api';
+import { useListaPaginada } from '../compartilhado';
+import { avaliacaoApi } from './avaliacao.api';
+import type { ItemFila } from './avaliacao.types';
 
 /** `GET /avaliacao/fila` (só comitê e administrador), com "Ver mais". */
 export function useFila(limit = 20) {

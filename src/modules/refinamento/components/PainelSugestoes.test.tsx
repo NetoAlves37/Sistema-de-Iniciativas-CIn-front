@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { Comentario } from '../comentarios.api';
+import type { Comentario } from '../refinamento.types';
 import { PainelSugestoes } from './PainelSugestoes';
 
 function comentario(parcial: Partial<Comentario> & { id: string }): Comentario {

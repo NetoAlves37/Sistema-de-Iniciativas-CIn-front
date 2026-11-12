@@ -15,12 +15,16 @@ import {
   httpErrors,
 } from '@cincoders/cinnamon';
 import { EmptyState } from '../../components/EmptyState';
-import { MiniVotes } from '../../modules/iniciativas/components/MiniVotes';
-import { StatusBadge } from '../../modules/iniciativas/components/StatusBadge';
-import { TipoChip } from '../../modules/iniciativas/components/TipoChip';
-import type { StatusIniciativa } from '../../modules/iniciativas/iniciativas.types';
-import { ROTULO_STATUS, STATUS_ORDEM } from '../../modules/iniciativas/rotulos';
-import { totalDasContagens, useMinhas } from '../../modules/iniciativas/useMinhas';
+import { MiniVotos } from '../../modules/votacao';
+import {
+  ROTULO_STATUS,
+  STATUS_ORDEM,
+  StatusBadge,
+  type StatusIniciativa,
+  TipoChip,
+  totalDasContagens,
+  useMinhas,
+} from '../../modules/iniciativas';
 import { Links, linkDetalhe, linkEditar } from '../../utils/enums';
 import { podeEditarNaLista, proximoPasso } from './proximoPasso';
 
@@ -175,7 +179,7 @@ export default function MinhasPage() {
                   </TableCell>
                   <TableCell>{proximoPasso(iniciativa)}</TableCell>
                   <TableCell>
-                    <MiniVotes
+                    <MiniVotos
                       likes={iniciativa.votos.likes}
                       dislikes={iniciativa.votos.dislikes}
                     />

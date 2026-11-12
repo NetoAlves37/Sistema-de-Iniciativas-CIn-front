@@ -1,16 +1,15 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import type { Ocorrencia } from '../../modules/divulgacao/divulgacao.api';
-import { CalendarioIniciativas } from '../../modules/divulgacao/components/CalendarioIniciativas';
-import { PopoverEvento } from '../../modules/divulgacao/components/PopoverEvento';
 import {
-  ocorrenciaParaEvento,
-  useOcorrencias,
+  CalendarioIniciativas,
   type IntervaloCalendario,
-} from '../../modules/divulgacao/useOcorrencias';
-import type { TipoIniciativa } from '../../modules/iniciativas/iniciativas.types';
-import { CLASSE_TIPO, ROTULO_TIPO, TIPOS } from '../../modules/iniciativas/rotulos';
+  type Ocorrencia,
+  ocorrenciaParaEvento,
+  PopoverEvento,
+  useOcorrencias,
+} from '../../modules/divulgacao';
+import { CLASSE_TIPO, ROTULO_TIPO, type TipoIniciativa, TIPOS } from '../../modules/iniciativas';
 import { Links } from '../../utils/enums';
 
 interface Selecao {

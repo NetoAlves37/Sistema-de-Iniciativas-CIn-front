@@ -2,7 +2,8 @@ import { toast } from '@cincoders/cinnamon';
 import { useCallback, useRef, useState } from 'react';
 import { ApiError } from '../../services/api';
 import type { StatusIniciativa, ValorVoto } from '../iniciativas/iniciativas.types';
-import { votoApi, type ResultadoVoto } from './voto.api';
+import { votoApi } from './voto.api';
+import type { ResultadoVoto } from './votacao.types';
 
 export interface EstadoVotos {
   meuVoto: ValorVoto | 0;

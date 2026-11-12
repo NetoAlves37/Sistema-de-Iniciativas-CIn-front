@@ -1,18 +1,19 @@
 import { toast } from '@cincoders/cinnamon';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useMe } from '../../modules/identidade/MeProvider';
-import { Destaque } from '../../modules/iniciativas/components/CalloutStatus';
-import { IniciativaForm } from '../../modules/iniciativas/components/IniciativaForm';
-import { NadaPorAqui } from '../../modules/iniciativas/components/NadaPorAqui';
-import { valoresDeIniciativa } from '../../modules/iniciativas/iniciativa.schema';
-import type { DadosIniciativaInput, DetalheIniciativa } from '../../modules/iniciativas/iniciativas.types';
-import { restanteAte } from '../../modules/iniciativas/prazo';
-import { ROTULO_STATUS } from '../../modules/iniciativas/rotulos';
+import { useMe } from '../../modules/identidade';
 import {
+  type DadosIniciativaInput,
+  Destaque,
+  type DetalheIniciativa,
+  IniciativaForm,
+  NadaPorAqui,
+  ROTULO_STATUS,
   useAtualizarIniciativa,
+  useIniciativa,
   useRessubmeterIniciativa,
-} from '../../modules/iniciativas/useAcoesIniciativa';
-import { useIniciativa } from '../../modules/iniciativas/useIniciativa';
+  valoresDeIniciativa,
+} from '../../modules/iniciativas';
+import { restanteAte } from '../../modules/compartilhado';
 import { ApiError } from '../../services/api';
 import { linkDetalhe } from '../../utils/enums';
 

@@ -2,7 +2,8 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '../../../services/api';
 import { aplicarVotoLocal, painelVotosVisivel, useVoto, type EstadoVotos } from '../useVoto';
-import { votoApi, type ResultadoVoto } from '../voto.api';
+import { votoApi } from '../voto.api';
+import type { ResultadoVoto } from '../votacao.types';
 import { PainelVotos } from './PainelVotos';
 
 const { toast } = vi.hoisted(() => ({ toast: { success: vi.fn(), error: vi.fn() } }));

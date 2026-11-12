@@ -1,7 +1,7 @@
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
 
 /** Contagem compacta de likes e dislikes, para listas e tabelas. */
-export function MiniVotes({ likes, dislikes }: { likes: number; dislikes: number }) {
+export function MiniVotos({ likes, dislikes }: { likes: number; dislikes: number }) {
   return (
     <span className="inline-flex items-center gap-3 text-sm text-gray-700 dark:text-gray-300">
       <span className="inline-flex items-center gap-1" title="Likes">

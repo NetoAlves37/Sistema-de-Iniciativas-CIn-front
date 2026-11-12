@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { CartaoAprovada } from '../../modules/divulgacao/components/CartaoAprovada';
-import { useAprovadas } from '../../modules/divulgacao/useAprovadas';
-import type { TipoIniciativa } from '../../modules/iniciativas/iniciativas.types';
-import { ROTULO_TIPO, TIPOS } from '../../modules/iniciativas/rotulos';
+import { CartaoAprovada, useAprovadas } from '../../modules/divulgacao';
+import { ROTULO_TIPO, type TipoIniciativa, TIPOS } from '../../modules/iniciativas';
 import { Links } from '../../utils/enums';
 
 const CLASSE_CAMPO =

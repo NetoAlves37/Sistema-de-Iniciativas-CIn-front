@@ -1,5 +1,5 @@
 import type { Transicao } from '../iniciativas.types';
-import { fmtInstante } from '../prazo';
+import { fmtInstante } from '../../compartilhado';
 import { ROTULO_STATUS } from '../rotulos';
 
 /** Linha do tempo de status, recolhida por padrão. Mais recente primeiro. */

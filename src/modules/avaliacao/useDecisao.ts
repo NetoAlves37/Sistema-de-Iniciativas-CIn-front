@@ -1,7 +1,7 @@
 import { toast } from '@cincoders/cinnamon';
 import { useCallback, useState } from 'react';
 import { ApiError } from '../../services/api';
-import { useAcao } from '../iniciativas/useAcoesIniciativa';
+import { useAcao } from '../compartilhado';
 import { avaliacaoApi } from './avaliacao.api';
 
 interface OpcoesDecisao {

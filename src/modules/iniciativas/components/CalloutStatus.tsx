@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import type { DetalheIniciativa } from '../iniciativas.types';
-import { fmtInstante, restanteAte } from '../prazo';
+import { fmtInstante, restanteAte } from '../../compartilhado';
 
 interface CalloutStatusProps {
   iniciativa: DetalheIniciativa;

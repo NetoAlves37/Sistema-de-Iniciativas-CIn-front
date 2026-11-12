@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Links } from '../../../utils/enums';
-import { BTN_PRIMARIO, BTN_SECUNDARIO, CLASSE_CARTAO } from '../estilos';
+import { BTN_PRIMARIO, BTN_SECUNDARIO, CLASSE_CARTAO } from '../../compartilhado/estilos';
 
 interface NadaPorAquiProps {
   mensagem: string;

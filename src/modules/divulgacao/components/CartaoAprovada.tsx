@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { linkDetalhe } from '../../../utils/enums';
 import type { ResumoIniciativa } from '../../iniciativas/iniciativas.types';
 import { TipoChip } from '../../iniciativas/components/TipoChip';
-import { fmtPeriodo } from '../../iniciativas/prazo';
+import { fmtPeriodo } from '../../compartilhado/prazo';
 import { CLASSE_TIPO, ROTULO_PERIODICIDADE } from '../../iniciativas/rotulos';
 
 /** Cartão de iniciativa aprovada: capa colorida pelo tipo com a inicial do título. */

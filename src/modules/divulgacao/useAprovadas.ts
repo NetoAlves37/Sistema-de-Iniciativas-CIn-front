@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useListaPaginada } from '../iniciativas/useIniciativas';
+import { useListaPaginada } from '../compartilhado/useListaPaginada';
 import type { ResumoIniciativa, TipoIniciativa } from '../iniciativas/iniciativas.types';
 import { divulgacaoApi } from './divulgacao.api';
 

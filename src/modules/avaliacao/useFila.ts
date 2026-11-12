@@ -1,4 +1,4 @@
-import { useListaPaginada } from '../iniciativas/useIniciativas';
+import { useListaPaginada } from '../compartilhado/useListaPaginada';
 import { avaliacaoApi, type ItemFila } from './avaliacao.api';
 
 /** `GET /avaliacao/fila` (só comitê e administrador), com "Ver mais". */

@@ -11,7 +11,7 @@ import { NadaPorAqui } from '../../modules/iniciativas/components/NadaPorAqui';
 import { Stepper } from '../../modules/iniciativas/components/Stepper';
 import { StatusBadge } from '../../modules/iniciativas/components/StatusBadge';
 import { TipoChip } from '../../modules/iniciativas/components/TipoChip';
-import { BTN_PRIMARIO, BTN_SECUNDARIO, CLASSE_CARTAO, CLASSE_TITULO_SECAO } from '../../modules/iniciativas/estilos';
+import { BTN_PRIMARIO, BTN_SECUNDARIO, CLASSE_CARTAO, CLASSE_TITULO_SECAO } from '../../modules/compartilhado/estilos';
 import { useHistorico, useIniciativa } from '../../modules/iniciativas/useIniciativa';
 import { PainelSugestoes } from '../../modules/refinamento/components/PainelSugestoes';
 import { useComentarios } from '../../modules/refinamento/useComentarios';

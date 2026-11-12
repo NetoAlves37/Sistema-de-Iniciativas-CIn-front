@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { fmtDia } from '../iniciativas/prazo';
+import { fmtDia } from '../compartilhado/prazo';
 import { ROTULO_PERIODICIDADE } from '../iniciativas/rotulos';
 import type { Ocorrencia } from './divulgacao.api';
 

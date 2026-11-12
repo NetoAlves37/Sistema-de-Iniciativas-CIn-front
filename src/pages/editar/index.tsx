@@ -6,7 +6,7 @@ import { IniciativaForm } from '../../modules/iniciativas/components/IniciativaF
 import { NadaPorAqui } from '../../modules/iniciativas/components/NadaPorAqui';
 import { valoresDeIniciativa } from '../../modules/iniciativas/iniciativa.schema';
 import type { DadosIniciativaInput, DetalheIniciativa } from '../../modules/iniciativas/iniciativas.types';
-import { restanteAte } from '../../modules/iniciativas/prazo';
+import { restanteAte } from '../../modules/compartilhado/prazo';
 import { ROTULO_STATUS } from '../../modules/iniciativas/rotulos';
 import {
   useAtualizarIniciativa,

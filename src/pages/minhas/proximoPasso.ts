@@ -1,5 +1,5 @@
 import type { ResumoIniciativa } from '../../modules/iniciativas/iniciativas.types';
-import { fmtInstante } from '../../modules/iniciativas/prazo';
+import { fmtInstante } from '../../modules/compartilhado/prazo';
 
 /** Status em que o autor pode editar (ou ressubmeter): ação "Editar" da tabela. */
 export function podeEditarNaLista(status: ResumoIniciativa['status']): boolean {

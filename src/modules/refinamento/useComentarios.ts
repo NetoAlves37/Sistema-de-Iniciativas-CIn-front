@@ -2,7 +2,7 @@ import { toast } from '@cincoders/cinnamon';
 import { useCallback } from 'react';
 import { useAsync } from '../../hooks/useAsync';
 import { ApiError } from '../../services/api';
-import { useAcao } from '../iniciativas/useAcoesIniciativa';
+import { useAcao } from '../compartilhado/useAcao';
 import { comentariosApi, type Comentario } from './comentarios.api';
 
 interface OpcoesComentarios {

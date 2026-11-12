@@ -1,5 +1,5 @@
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
-import { CLASSE_CARTAO, CLASSE_TITULO_SECAO } from '../../iniciativas/estilos';
+import { CLASSE_CARTAO, CLASSE_TITULO_SECAO } from '../../compartilhado/estilos';
 import type { ValorVoto } from '../../iniciativas/iniciativas.types';
 import type { EstadoVotos } from '../useVoto';
 

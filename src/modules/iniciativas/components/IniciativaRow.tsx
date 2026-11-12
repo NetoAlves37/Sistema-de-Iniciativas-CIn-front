@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { linkDetalhe } from '../../../utils/enums';
 import type { ResumoIniciativa } from '../iniciativas.types';
-import { restanteAte } from '../prazo';
+import { restanteAte } from '../../compartilhado/prazo';
 import { CLASSE_TIPO } from '../rotulos';
 import { MiniVotes } from './MiniVotes';
 import { StatusBadge } from './StatusBadge';

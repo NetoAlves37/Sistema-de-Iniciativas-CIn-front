@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { X } from 'lucide-react';
+import { CalendarClock, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { linkDetalhe } from '../../../utils/enums';
-import { CLASSE_TIPO, ROTULO_TIPO } from '../../iniciativas';
+import { useTipos } from '../../iniciativas';
 import type { Ocorrencia } from '../divulgacao.types';
 import { quandoDaOcorrencia, repeticaoDaOcorrencia } from '../ocorrencias.format';
 
@@ -11,13 +11,21 @@ interface PopoverEventoProps {
   /** Retângulo do evento clicado, para posicionar o popover ao lado dele. */
   ancora?: DOMRect | null;
   onFechar: () => void;
+  /** Comitê ou ADMIN: mostra "Alterar datas". */
+  onAlterarDatas?: () => void;
 }
 
 /**
  * Detalhes de uma ocorrência no calendário. Diálogo não modal acessível: o foco vai para o
  * botão fechar, Esc e clique fora fecham, e o foco volta para onde estava.
  */
-export function PopoverEvento({ ocorrencia, ancora, onFechar }: PopoverEventoProps) {
+export function PopoverEvento({
+  ocorrencia,
+  ancora,
+  onFechar,
+  onAlterarDatas,
+}: PopoverEventoProps) {
+  const tipo = useTipos().visual(ocorrencia.tipo);
   const raiz = useRef<HTMLDivElement>(null);
   const botaoFechar = useRef<HTMLButtonElement>(null);
   const [posicao, setPosicao] = useState<{ left: number; top: number } | null>(null);
@@ -79,7 +87,8 @@ export function PopoverEvento({ ocorrencia, ancora, onFechar }: PopoverEventoPro
       <div className="grid grid-cols-[16px_1fr] items-start gap-3">
         <span
           aria-hidden="true"
-          className={`mt-1.5 h-4 w-4 rounded ${CLASSE_TIPO[ocorrencia.tipo]}`}
+          className="mt-1.5 h-4 w-4 rounded"
+          style={{ backgroundColor: tipo.cor }}
         />
         <div>
           <h3 id="ev-pop-titulo" className="text-lg leading-snug font-semibold">
@@ -93,7 +102,7 @@ export function PopoverEvento({ ocorrencia, ancora, onFechar }: PopoverEventoPro
 
       <dl className="mt-3 mb-3.5 ml-7 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-sm">
         <dt className="text-gray-600 dark:text-gray-400">Tipo</dt>
-        <dd>{ROTULO_TIPO[ocorrencia.tipo]}</dd>
+        <dd>{tipo.nome}</dd>
         <dt className="text-gray-600 dark:text-gray-400">Repete</dt>
         <dd>{repeticaoDaOcorrencia(ocorrencia)}</dd>
         <dt className="text-gray-600 dark:text-gray-400">Local</dt>
@@ -117,6 +126,16 @@ export function PopoverEvento({ ocorrencia, ancora, onFechar }: PopoverEventoPro
         >
           Adicionar ao Google Agenda
         </a>
+        {onAlterarDatas && (
+          <button
+            type="button"
+            onClick={onAlterarDatas}
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-800"
+          >
+            <CalendarClock className="h-4 w-4" aria-hidden="true" />
+            Alterar datas
+          </button>
+        )}
       </div>
     </div>
   );

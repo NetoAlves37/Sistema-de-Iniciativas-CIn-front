@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { linkDetalhe } from '../../../utils/enums';
 import {
-  CLASSE_TIPO,
   type ResumoIniciativa,
   ROTULO_PERIODICIDADE,
   TipoChip,
+  useTipos,
 } from '../../iniciativas';
 import { fmtPeriodo } from '../../compartilhado';
 
@@ -12,6 +12,7 @@ import { fmtPeriodo } from '../../compartilhado';
 export function CartaoAprovada({ iniciativa }: { iniciativa: ResumoIniciativa }) {
   const inicial = iniciativa.titulo.trim().charAt(0).toUpperCase();
   const periodicidade = ROTULO_PERIODICIDADE[iniciativa.periodicidade].toLowerCase();
+  const { cor, corTexto } = useTipos().visual(iniciativa.tipo);
 
   return (
     <Link
@@ -20,7 +21,8 @@ export function CartaoAprovada({ iniciativa }: { iniciativa: ResumoIniciativa })
     >
       <span
         aria-hidden="true"
-        className={`grid h-[120px] place-items-center text-[2.4rem] font-extrabold ${CLASSE_TIPO[iniciativa.tipo]}`}
+        className="grid h-[120px] place-items-center text-[2.4rem] font-extrabold"
+        style={{ backgroundColor: cor, color: corTexto }}
       >
         {inicial}
       </span>

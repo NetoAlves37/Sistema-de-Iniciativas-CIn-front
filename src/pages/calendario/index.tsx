@@ -3,13 +3,22 @@ import { RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
   CalendarioIniciativas,
+  datasAposArrastar,
+  datasDaOcorrencia,
+  type DestinoArrasto,
+  DialogoAlterarDatas,
   type IntervaloCalendario,
   type Ocorrencia,
   ocorrenciaParaEvento,
   PopoverEvento,
   useOcorrencias,
 } from '../../modules/divulgacao';
-import { CLASSE_TIPO, ROTULO_TIPO, type TipoIniciativa, TIPOS } from '../../modules/iniciativas';
+import { useMe } from '../../modules/identidade';
+import {
+  type DatasIniciativaInput,
+  type TipoIniciativa,
+  useTipos,
+} from '../../modules/iniciativas';
 import { Links } from '../../utils/enums';
 
 interface Selecao {
@@ -17,15 +26,42 @@ interface Selecao {
   ancora: DOMRect;
 }
 
-/** Calendário (HU-19, HU-20): ocorrências das aprovadas no intervalo visível. */
+interface Edicao {
+  ocorrencia: Ocorrencia;
+  valores: DatasIniciativaInput;
+  arrastado: boolean;
+}
+
+/**
+ * Calendário (HU-19, HU-20): ocorrências das aprovadas no intervalo visível. O comitê e o
+ * ADMIN também alteram as datas, pelo popover ou arrastando o evento (a série inteira).
+ */
 export default function CalendarioPage() {
+  const { me } = useMe();
+  const podeAlterar = Boolean(me?.ehComite);
+  const [edicao, setEdicao] = useState<Edicao | null>(null);
   const [intervalo, setIntervalo] = useState<IntervaloCalendario | null>(null);
-  const [tipos, setTipos] = useState<TipoIniciativa[]>(TIPOS);
+  const { todos: tiposCadastrados, visual } = useTipos();
+  // Guarda os DESMARCADOS: assim um tipo cadastrado depois já aparece marcado.
+  const [desmarcados, setDesmarcados] = useState<ReadonlySet<TipoIniciativa>>(new Set());
+  const tipos = useMemo(
+    () => tiposCadastrados.map((t) => t.code).filter((code) => !desmarcados.has(code)),
+    [tiposCadastrados, desmarcados],
+  );
+  const todosOsTipos = tiposCadastrados.every((t) => !desmarcados.has(t.code));
   const [minhas, setMinhas] = useState(false);
   const [selecao, setSelecao] = useState<Selecao | null>(null);
 
-  const { ocorrencias, isLoading, error, reload } = useOcorrencias({ intervalo, tipos, minhas });
-  const eventos = useMemo(() => ocorrencias.map(ocorrenciaParaEvento), [ocorrencias]);
+  const { ocorrencias, isLoading, error, reload } = useOcorrencias({
+    intervalo,
+    tipos,
+    todosOsTipos,
+    minhas,
+  });
+  const eventos = useMemo(
+    () => ocorrencias.map((o) => ocorrenciaParaEvento(o, visual(o.tipo))),
+    [ocorrencias, visual],
+  );
 
   const ultimoIntervalo = useRef<IntervaloCalendario | null>(null);
   const aoMudarIntervalo = useCallback((novo: IntervaloCalendario) => {
@@ -41,10 +77,25 @@ export default function CalendarioPage() {
     setSelecao({ ocorrencia, ancora: elemento.getBoundingClientRect() });
   }, []);
 
+  const aoArrastar = useCallback((ocorrencia: Ocorrencia, destino: DestinoArrasto) => {
+    setSelecao(null);
+    setEdicao({ ocorrencia, valores: datasAposArrastar(ocorrencia, destino), arrastado: true });
+  }, []);
+
+  const alterarDatasDaSelecao = () => {
+    if (!selecao) return;
+    const { ocorrencia } = selecao;
+    setSelecao(null);
+    setEdicao({ ocorrencia, valores: datasDaOcorrencia(ocorrencia), arrastado: false });
+  };
+
   const alternarTipo = (tipo: TipoIniciativa) =>
-    setTipos((atuais) =>
-      atuais.includes(tipo) ? atuais.filter((t) => t !== tipo) : [...atuais, tipo],
-    );
+    setDesmarcados((atuais) => {
+      const novos = new Set(atuais);
+      if (novos.has(tipo)) novos.delete(tipo);
+      else novos.add(tipo);
+      return novos;
+    });
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -56,6 +107,12 @@ export default function CalendarioPage() {
           Iniciativas aprovadas. Clique em um evento para ver os detalhes ou adicioná-lo ao seu
           Google Agenda.
         </p>
+        {podeAlterar && (
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            Como membro do comitê, você pode alterar as datas pelo botão "Alterar datas" do evento
+            ou arrastando-o para outro dia.
+          </p>
+        )}
       </div>
 
       <div className="grid items-start gap-[18px] min-[861px]:grid-cols-[230px_minmax(0,1fr)]">
@@ -71,19 +128,28 @@ export default function CalendarioPage() {
             <legend className="mb-1.5 text-sm font-bold text-gray-900 dark:text-gray-100">
               Tipos de iniciativa
             </legend>
-            {TIPOS.map((tipo) => (
-              <label key={tipo} className="flex cursor-pointer items-center gap-2.5 py-1 text-sm">
+            {tiposCadastrados.length === 0 && (
+              <p className="py-1 text-sm text-gray-600 dark:text-gray-400">
+                Nenhum tipo cadastrado.
+              </p>
+            )}
+            {tiposCadastrados.map((tipo) => (
+              <label
+                key={tipo.code}
+                className="flex cursor-pointer items-center gap-2.5 py-1 text-sm"
+              >
                 <input
                   type="checkbox"
-                  checked={tipos.includes(tipo)}
-                  onChange={() => alternarTipo(tipo)}
+                  checked={!desmarcados.has(tipo.code)}
+                  onChange={() => alternarTipo(tipo.code)}
                   className="h-[18px] w-[18px] accent-red-800"
                 />
                 <span
                   aria-hidden="true"
-                  className={`h-3.5 w-3.5 shrink-0 rounded-[3px] ${CLASSE_TIPO[tipo]}`}
+                  className="h-3.5 w-3.5 shrink-0 rounded-[3px]"
+                  style={{ backgroundColor: tipo.cor }}
                 />
-                {ROTULO_TIPO[tipo]}
+                {tipo.nome}
               </label>
             ))}
           </fieldset>
@@ -125,6 +191,7 @@ export default function CalendarioPage() {
             eventos={eventos}
             onIntervalo={aoMudarIntervalo}
             onSelecionar={aoSelecionar}
+            onArrastar={podeAlterar ? aoArrastar : undefined}
           />
         </div>
       </div>
@@ -134,6 +201,20 @@ export default function CalendarioPage() {
           ocorrencia={selecao.ocorrencia}
           ancora={selecao.ancora}
           onFechar={() => setSelecao(null)}
+          onAlterarDatas={podeAlterar ? alterarDatasDaSelecao : undefined}
+        />
+      )}
+
+      {edicao && (
+        <DialogoAlterarDatas
+          ocorrencia={edicao.ocorrencia}
+          valoresIniciais={edicao.valores}
+          arrastado={edicao.arrastado}
+          onFechar={() => setEdicao(null)}
+          onSalvo={() => {
+            setEdicao(null);
+            reload();
+          }}
         />
       )}
     </div>

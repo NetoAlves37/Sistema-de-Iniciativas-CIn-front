@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import type { DetalheIniciativa } from '../iniciativas.types';
 import { fmtPeriodo } from '../../compartilhado';
-import { ROTULO_PERIODICIDADE, ROTULO_TIPO } from '../rotulos';
+import { ROTULO_PERIODICIDADE } from '../rotulos';
+import { useTipos } from '../useTipos';
 
 function Campo({ rotulo, children, largo }: { rotulo: string; children: ReactNode; largo?: boolean }) {
   return (
@@ -24,9 +25,10 @@ function formatarPeriodo(d: Pick<DetalheIniciativa, 'inicio' | 'fim' | 'horaInic
 
 /** Grade somente leitura com todos os campos da iniciativa. */
 export function DadosIniciativa({ iniciativa: d }: { iniciativa: DetalheIniciativa }) {
+  const { visual } = useTipos();
   return (
     <dl className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-4">
-      <Campo rotulo="Tipo">{ROTULO_TIPO[d.tipo]}</Campo>
+      <Campo rotulo="Tipo">{visual(d.tipo).nome}</Campo>
       <Campo rotulo="Título" largo>
         {d.titulo}
       </Campo>

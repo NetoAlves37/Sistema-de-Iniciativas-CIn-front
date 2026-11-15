@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from '@cincoders/cinnamon';
 import { Loader2 } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useMemo } from 'react';
 import { useForm, useWatch, type FieldPath } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { ApiError } from '../../../services/api';
@@ -21,7 +21,8 @@ import {
   CLASSE_ERRO,
 } from '../../compartilhado';
 import type { DadosIniciativaInput } from '../iniciativas.types';
-import { PERIODICIDADES, ROTULO_PERIODICIDADE, ROTULO_TIPO, TIPOS } from '../rotulos';
+import { PERIODICIDADES, ROTULO_PERIODICIDADE } from '../rotulos';
+import { useTipos } from '../useTipos';
 
 export const MENSAGEM_REVISE = 'Revise os campos destacados.';
 
@@ -114,6 +115,8 @@ export function IniciativaForm({
     handleSubmit,
     setError,
     setFocus,
+    setValue,
+    getValues,
     control,
     formState: { errors, isSubmitting },
   } = useForm<IniciativaFormValues>({
@@ -122,6 +125,23 @@ export function IniciativaForm({
   });
 
   const comVotacao = useWatch({ control, name: 'comVotacao' });
+
+  // Tipos do cadastro: só os ativos podem ser escolhidos. Na edição, o tipo atual continua
+  // na lista mesmo que tenha sido desativado depois da submissão.
+  const tipos = useTipos();
+  const tipoInicial = valoresIniciais?.tipo;
+  const opcoesDeTipo = useMemo(() => {
+    const lista = [...tipos.ativos];
+    const atual = tipos.todos.find((t) => t.code === tipoInicial);
+    if (atual && !atual.ativo) lista.push(atual);
+    return lista;
+  }, [tipos.ativos, tipos.todos, tipoInicial]);
+
+  // Se os tipos chegam depois da montagem, o <select> ainda não tinha a opção do valor
+  // inicial: reaplica o valor para ele aparecer selecionado.
+  useEffect(() => {
+    if (opcoesDeTipo.length > 0) setValue('tipo', getValues('tipo'));
+  }, [opcoesDeTipo, setValue, getValues]);
 
   /** `ajuda` é o id do texto de apoio (quando existe); o erro é ligado automaticamente. */
   const aria = (nome: NomeCampo, ajuda?: string) => {
@@ -185,14 +205,21 @@ export function IniciativaForm({
         <div className="grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-4">
           <Campo nome="tipo" rotulo="Tipo">
             <select {...register('tipo')} {...aria('tipo')} className={CLASSE_CAMPO}>
-              <option value="">Selecione</option>
-              {TIPOS.map((t) => (
-                <option key={t} value={t}>
-                  {ROTULO_TIPO[t]}
+              <option value="">{tipos.carregando ? 'Carregando…' : 'Selecione'}</option>
+              {opcoesDeTipo.map((t) => (
+                <option key={t.code} value={t.code}>
+                  {t.ativo ? t.nome : `${t.nome} (desativado)`}
                 </option>
               ))}
             </select>
             {erro('tipo')}
+            {!tipos.carregando && opcoesDeTipo.length === 0 && (
+              <p className={CLASSE_AJUDA}>
+                {tipos.erro
+                  ? tipos.erro.message
+                  : 'Nenhum tipo de iniciativa cadastrado ainda. Peça ao comitê para cadastrar.'}
+              </p>
+            )}
           </Campo>
 
           <Campo nome="titulo" rotulo="Título" largura="largo">

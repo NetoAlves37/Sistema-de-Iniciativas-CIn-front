@@ -11,6 +11,7 @@ export enum Links {
   APROVADAS = '/aprovadas',
   CALENDARIO = '/calendario',
   ANALISE = '/analise',
+  TIPOS = '/tipos-iniciativa',
   PRIVACIDADE = '/privacidade',
 }
 
@@ -50,4 +51,4 @@ export const COMITE_ROLES: Roles[] = [Roles.COMITE, Roles.ADMIN];
  * restrição de verdade é o `permittedRoles` da rota em `routes.tsx` e, acima de tudo, o
  * backend.
  */
-export const COMITE_ONLY_LINKS: string[] = [Links.ANALISE];
+export const COMITE_ONLY_LINKS: string[] = [Links.ANALISE, Links.TIPOS];

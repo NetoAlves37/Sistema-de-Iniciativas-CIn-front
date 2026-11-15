@@ -1,4 +1,4 @@
-import type { Periodicidade, StatusIniciativa, TipoIniciativa } from './iniciativas.types';
+import type { Periodicidade, StatusIniciativa } from './iniciativas.types';
 
 export const STATUS_ORDEM: StatusIniciativa[] = [
   'EM_ANDAMENTO',
@@ -7,8 +7,6 @@ export const STATUS_ORDEM: StatusIniciativa[] = [
   'APROVADA',
   'REPROVADA',
 ];
-
-export const TIPOS: TipoIniciativa[] = ['EXTENSAO', 'PESQUISA', 'EVENTO'];
 
 export const PERIODICIDADES: Periodicidade[] = [
   'EVENTO_UNICO',
@@ -24,12 +22,6 @@ export const ROTULO_STATUS: Record<StatusIniciativa, string> = {
   EM_ANALISE: 'Em análise',
   APROVADA: 'Aprovada',
   REPROVADA: 'Reprovada',
-};
-
-export const ROTULO_TIPO: Record<TipoIniciativa, string> = {
-  EXTENSAO: 'Extensão',
-  PESQUISA: 'Pesquisa',
-  EVENTO: 'Evento',
 };
 
 export const ROTULO_PERIODICIDADE: Record<Periodicidade, string> = {
@@ -50,11 +42,4 @@ export const CLASSE_STATUS: Record<StatusIniciativa, string> = {
   EM_ANALISE: 'bg-[var(--st-analise-bg)] text-[var(--st-analise-fg)]',
   APROVADA: 'bg-[var(--st-aprovada-bg)] text-[var(--st-aprovada-fg)]',
   REPROVADA: 'bg-[var(--st-reprovada-bg)] text-[var(--st-reprovada-fg)]',
-};
-
-/** Classes Tailwind por tipo (variáveis `--tp-*` em `src/index.css`). */
-export const CLASSE_TIPO: Record<TipoIniciativa, string> = {
-  EXTENSAO: 'bg-[var(--tp-ext-bg)] text-[var(--tp-fg)]',
-  PESQUISA: 'bg-[var(--tp-pes-bg)] text-[var(--tp-fg)]',
-  EVENTO: 'bg-[var(--tp-evt-bg)] text-[var(--tp-fg)]',
 };

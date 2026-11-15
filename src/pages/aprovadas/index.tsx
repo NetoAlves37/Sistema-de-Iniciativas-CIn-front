@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CartaoAprovada, useAprovadas } from '../../modules/divulgacao';
-import { ROTULO_TIPO, type TipoIniciativa, TIPOS } from '../../modules/iniciativas';
+import { type TipoIniciativa, useTipos } from '../../modules/iniciativas';
 import { Links } from '../../utils/enums';
 
 const CLASSE_CAMPO =
@@ -12,6 +12,7 @@ const CLASSE_CAMPO =
 export default function AprovadasPage() {
   const [busca, setBusca] = useState('');
   const [tipo, setTipo] = useState<TipoIniciativa | ''>('');
+  const { todos: tipos } = useTipos();
   const { items, isLoading, isLoadingMore, error, temMais, verMais, reload } = useAprovadas({
     busca,
     tipo,
@@ -52,9 +53,9 @@ export default function AprovadasPage() {
           className={CLASSE_CAMPO}
         >
           <option value="">Todos os tipos</option>
-          {TIPOS.map((t) => (
-            <option key={t} value={t}>
-              {ROTULO_TIPO[t]}
+          {tipos.map((t) => (
+            <option key={t.code} value={t.code}>
+              {t.nome}
             </option>
           ))}
         </select>

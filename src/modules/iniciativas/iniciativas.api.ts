@@ -3,6 +3,7 @@ import { montarQuery } from '../../services/query';
 import type {
   ContagemPorStatus,
   DadosIniciativaInput,
+  DatasIniciativaInput,
   DetalheIniciativa,
   FiltroIniciativas,
   ResumoIniciativa,
@@ -64,6 +65,15 @@ export const iniciativasApi = {
       ...json(dados),
     });
     return readData(resposta, 'Não foi possível salvar as alterações.');
+  },
+
+  /** Comitê ou ADMIN muda datas e horários de uma aprovada (a série inteira). */
+  async alterarDatas(id: string, datas: DatasIniciativaInput): Promise<DetalheIniciativa> {
+    const resposta = await fetchApi(`${API_URL}/iniciativas/${id}/datas`, {
+      method: 'PATCH',
+      ...json(datas),
+    });
+    return readData(resposta, 'Não foi possível alterar as datas.');
   },
 
   async ressubmeter(id: string, dados: DadosIniciativaInput): Promise<DetalheIniciativa> {

@@ -196,18 +196,6 @@ button[aria-label="Exportar"] {
   --st-aprovada-fg: #ffffff;
   --st-reprovada-bg: #d91f2f;
   --st-reprovada-fg: #ffffff;
-
-  --tp-ext-bg: #9be0a0;
-  --tp-pes-bg: #a7c7f2;
-  --tp-evt-bg: #f7ae85;
-  --tp-fg: #231f20;
-}
-
-.dark {
-  --tp-ext-bg: #2f6b3a;
-  --tp-pes-bg: #2e4c75;
-  --tp-evt-bg: #7a4027;
-  --tp-fg: #ffffff;
 }
 
 /* ---------------------------------------------------------------------------
@@ -274,17 +262,9 @@ button[aria-label="Exportar"] {
 .gcal-main .fc .fc-event .fc-event-main,
 .gcal-main .fc .fc-event .fc-event-time,
 .gcal-main .fc .fc-event .fc-event-title {
-  color: var(--tp-fg);
+  /* Cor de fundo e do texto vêm de cada evento (cor do tipo no cadastro). */
+  color: inherit;
   font-weight: 600;
-}
-.gcal-main .fc .fc-tp-ext {
-  background: var(--tp-ext-bg);
-}
-.gcal-main .fc .fc-tp-pes {
-  background: var(--tp-pes-bg);
-}
-.gcal-main .fc .fc-tp-evt {
-  background: var(--tp-evt-bg);
 }
 .gcal-main .fc .fc-list-event.fc-event {
   background: transparent;
@@ -293,15 +273,6 @@ button[aria-label="Exportar"] {
 .gcal-main .fc .fc-list-event .fc-event-time {
   color: var(--foreground);
   font-weight: 500;
-}
-.gcal-main .fc .fc-tp-ext .fc-list-event-dot {
-  border-color: var(--tp-ext-bg);
-}
-.gcal-main .fc .fc-tp-pes .fc-list-event-dot {
-  border-color: var(--tp-pes-bg);
-}
-.gcal-main .fc .fc-tp-evt .fc-list-event-dot {
-  border-color: var(--tp-evt-bg);
 }
 @media (max-width: 560px) {
   .ev-pop {

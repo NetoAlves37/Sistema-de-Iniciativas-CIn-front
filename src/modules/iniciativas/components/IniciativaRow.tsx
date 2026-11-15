@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { linkDetalhe } from '../../../utils/enums';
 import type { ResumoIniciativa } from '../iniciativas.types';
 import { restanteAte } from '../../compartilhado';
-import { CLASSE_TIPO } from '../rotulos';
+import { useTipos } from '../useTipos';
 import { MiniVotos } from '../../votacao';
 import { StatusBadge } from './StatusBadge';
 import { TipoChip } from './TipoChip';
@@ -36,6 +36,7 @@ export function IniciativaRow({
   agora,
 }: IniciativaRowProps) {
   const restante = rotuloPrazo ? restanteAte(iniciativa.prazoAtual, agora) : null;
+  const { visual } = useTipos();
 
   return (
     <Link
@@ -47,7 +48,8 @@ export function IniciativaRow({
       ) : (
         <span
           aria-hidden="true"
-          className={`mt-1.5 h-3 w-3 rounded-[3px] ${CLASSE_TIPO[iniciativa.tipo]}`}
+          className="mt-1.5 h-3 w-3 rounded-[3px]"
+          style={{ backgroundColor: visual(iniciativa.tipo).cor }}
         />
       )}
 

@@ -1,13 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   CLASSE_STATUS,
-  CLASSE_TIPO,
   PERIODICIDADES,
   ROTULO_PERIODICIDADE,
   ROTULO_STATUS,
-  ROTULO_TIPO,
   STATUS_ORDEM,
-  TIPOS,
 } from './rotulos';
 
 describe('rótulos', () => {
@@ -19,7 +16,6 @@ describe('rótulos', () => {
       APROVADA: 'Aprovada',
       REPROVADA: 'Reprovada',
     });
-    expect(ROTULO_TIPO).toEqual({ EXTENSAO: 'Extensão', PESQUISA: 'Pesquisa', EVENTO: 'Evento' });
     expect(PERIODICIDADES.map((p) => ROTULO_PERIODICIDADE[p])).toEqual([
       'Evento único',
       'Diária',
@@ -29,8 +25,7 @@ describe('rótulos', () => {
     ]);
   });
 
-  it('cobrem todos os status e tipos com classes de cor', () => {
+  it('cobrem todos os status com classes de cor', () => {
     for (const status of STATUS_ORDEM) expect(CLASSE_STATUS[status]).toBeTruthy();
-    for (const tipo of TIPOS) expect(CLASSE_TIPO[tipo]).toBeTruthy();
   });
 });

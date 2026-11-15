@@ -21,24 +21,22 @@ describe('ocorrenciaParaEvento', () => {
       start: '2026-11-10T14:00',
       end: '2026-11-10T16:00',
       allDay: false,
-      classNames: ['fc-tp-evt'],
     });
     expect(evento.extendedProps?.ocorrencia).toBe(ocorrencia);
   });
 
   it('mantém o fim exclusivo das ocorrências de dia inteiro e usa a cor do tipo', () => {
-    const evento = ocorrenciaParaEvento({
-      ...ocorrencia,
-      tipo: 'PESQUISA',
-      diaInteiro: true,
-      inicio: '2026-11-10',
-      fim: '2026-11-11',
-    });
+    const evento = ocorrenciaParaEvento(
+      { ...ocorrencia, tipo: 'PESQUISA', diaInteiro: true, inicio: '2026-11-10', fim: '2026-11-11' },
+      { cor: '#A7C7F2', corTexto: '#231f20' },
+    );
     expect(evento).toMatchObject({
       start: '2026-11-10',
       end: '2026-11-11',
       allDay: true,
-      classNames: ['fc-tp-pes'],
+      backgroundColor: '#A7C7F2',
+      borderColor: '#A7C7F2',
+      textColor: '#231f20',
     });
   });
 
@@ -48,10 +46,8 @@ describe('ocorrenciaParaEvento', () => {
     expect(a.id).not.toBe(b.id);
   });
 
-  it('usa a cor de extensão', () => {
-    expect(ocorrenciaParaEvento({ ...ocorrencia, tipo: 'EXTENSAO' }).classNames).toEqual([
-      'fc-tp-ext',
-    ]);
+  it('sem o visual do tipo, deixa a cor para o padrão do calendário', () => {
+    expect(ocorrenciaParaEvento(ocorrencia).backgroundColor).toBeUndefined();
   });
 });
 
@@ -68,6 +64,7 @@ describe('useOcorrencias', () => {
   const base: FiltroCalendario = {
     intervalo: { de: '2026-11-01', ate: '2026-12-06' },
     tipos: ['EXTENSAO', 'PESQUISA', 'EVENTO'],
+    todosOsTipos: true,
     minhas: false,
   };
 
@@ -100,7 +97,7 @@ describe('useOcorrencias', () => {
     });
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    rerender({ ...base, tipos: ['EVENTO', 'PESQUISA'] });
+    rerender({ ...base, tipos: ['EVENTO', 'PESQUISA'], todosOsTipos: false });
     await waitFor(() =>
       expect(mockOcorrencias).toHaveBeenLastCalledWith({
         de: '2026-11-01',
@@ -110,7 +107,7 @@ describe('useOcorrencias', () => {
       }),
     );
 
-    rerender({ ...base, tipos: ['EVENTO', 'PESQUISA'], minhas: true });
+    rerender({ ...base, tipos: ['EVENTO', 'PESQUISA'], todosOsTipos: false, minhas: true });
     await waitFor(() =>
       expect(mockOcorrencias).toHaveBeenLastCalledWith(expect.objectContaining({ minhas: true })),
     );
@@ -131,7 +128,9 @@ describe('useOcorrencias', () => {
   });
 
   it('sem nenhum tipo marcado não chama a API e devolve lista vazia', async () => {
-    const { result } = renderHook(() => useOcorrencias({ ...base, tipos: [] }));
+    const { result } = renderHook(() =>
+      useOcorrencias({ ...base, tipos: [], todosOsTipos: false }),
+    );
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(mockOcorrencias).not.toHaveBeenCalled();
     expect(result.current.ocorrencias).toEqual([]);

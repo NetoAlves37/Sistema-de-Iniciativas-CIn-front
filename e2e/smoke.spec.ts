@@ -1,4 +1,5 @@
 import { expect, test, type Browser, type Page } from '@playwright/test';
+import { garantirTipo } from './apoio';
 
 /**
  * Smoke test do fluxo completo, no navegador, contra Keycloak + API + front reais.
@@ -69,6 +70,9 @@ async function aguardarNoDetalhe(pagina: Page, id: string, texto: string | RegEx
 test.describe.configure({ mode: 'serial' });
 
 test('fluxo completo: submeter, comentar, votar, decidir, ressubmeter e divulgar', async ({ browser }) => {
+  // Banco recriado = sem tipos (ADR-024). O comitê cadastra o "Evento" (código EVENTO) usado abaixo.
+  await garantirTipo(browser, 'Evento', '#F7AE85');
+
   // --- ana: login e as duas submissões ---------------------------------------------------
   const ana = await entrar(browser, 'ana');
   await expect(ana.getByText('Iniciativas da comunidade').first()).toBeVisible();

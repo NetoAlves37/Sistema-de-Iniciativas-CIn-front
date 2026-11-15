@@ -90,4 +90,19 @@ describe('<PopoverEvento>', () => {
     const { container } = renderizar();
     expect(await axe(container)).toHaveNoViolations();
   });
+  it('sem permissão, não mostra "Alterar datas"', () => {
+    renderizar();
+    expect(screen.queryByRole('button', { name: 'Alterar datas' })).not.toBeInTheDocument();
+  });
+
+  it('com permissão (comitê ou ADMIN), mostra "Alterar datas"', () => {
+    const onAlterarDatas = vi.fn();
+    render(
+      <MemoryRouter>
+        <PopoverEvento ocorrencia={ocorrencia} onFechar={vi.fn()} onAlterarDatas={onAlterarDatas} />
+      </MemoryRouter>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Alterar datas' }));
+    expect(onAlterarDatas).toHaveBeenCalledTimes(1);
+  });
 });

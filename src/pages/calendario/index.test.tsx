@@ -1,10 +1,22 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 import type { FiltroOcorrencias } from '../../modules/divulgacao/divulgacao.types';
 import { ocorrencia } from '../../modules/divulgacao/divulgacao.fixtures';
+import { TIPOS_DE_TESTE } from '../../modules/iniciativas/tipos.fixtures';
+import { semearTipos } from '../../modules/iniciativas/useTipos';
 import CalendarioPage from './index';
+
+const { useMe } = vi.hoisted(() => ({ useMe: vi.fn() }));
+vi.mock('../../modules/identidade/MeProvider', () => ({ useMe }));
+
+const { toast, alterarDatas } = vi.hoisted(() => ({
+  toast: { success: vi.fn(), error: vi.fn() },
+  alterarDatas: vi.fn(),
+}));
+vi.mock('@cincoders/cinnamon', () => ({ toast }));
+vi.mock('../../modules/iniciativas/iniciativas.api', () => ({ iniciativasApi: { alterarDatas } }));
 
 const mockOcorrencias = vi.fn();
 vi.mock('../../modules/divulgacao/divulgacao.api', () => ({
@@ -28,6 +40,7 @@ const renderizar = () =>
 describe('<CalendarioPage>', () => {
   beforeEach(() => {
     mockOcorrencias.mockReset();
+    useMe.mockReturnValue({ me: { ehComite: false } });
     mockOcorrencias.mockResolvedValue([doDia()]);
   });
 
@@ -169,5 +182,113 @@ describe('<CalendarioPage>', () => {
     const { container } = renderizar();
     await screen.findByText('Semana de Boas-Vindas');
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it('usuário sem papel de comitê não vê "Alterar datas" no popover', async () => {
+    renderizar();
+    fireEvent.click(await screen.findByText('Semana de Boas-Vindas'));
+    await screen.findByRole('dialog');
+    expect(screen.queryByRole('button', { name: 'Alterar datas' })).toBeNull();
+  });
+
+  it('comitê/ADMIN: "Alterar datas" abre o diálogo com a série, salva e recarrega o calendário', async () => {
+    useMe.mockReturnValue({ me: { ehComite: true } });
+    alterarDatas.mockResolvedValue({});
+    renderizar();
+    expect(screen.getByText(/você pode alterar as datas/)).toBeInTheDocument();
+
+    fireEvent.click(await screen.findByText('Semana de Boas-Vindas'));
+    fireEvent.click(await screen.findByRole('button', { name: 'Alterar datas' }));
+
+    const dialogo = await screen.findByRole('dialog', { name: 'Alterar datas' });
+    expect(within(dialogo).getByLabelText('Data de início')).toHaveValue('2026-11-10');
+    expect(within(dialogo).getByLabelText('Data de término')).toHaveValue('2026-12-20');
+    fireEvent.change(within(dialogo).getByLabelText('Data de término'), {
+      target: { value: '2026-12-27' },
+    });
+
+    const chamadasAntes = mockOcorrencias.mock.calls.length;
+    fireEvent.click(within(dialogo).getByRole('button', { name: 'Salvar' }));
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(alterarDatas).toHaveBeenCalledWith('ini-1', {
+      inicio: '2026-11-10',
+      fim: '2026-12-27',
+      horaInicio: null,
+      horaFim: null,
+    });
+    await waitFor(() => expect(mockOcorrencias.mock.calls.length).toBeGreaterThan(chamadasAntes));
+  });
+  describe('tipos do cadastro nos filtros', () => {
+    it('mostra todos os tipos cadastrados, inclusive os desativados, todos marcados', async () => {
+      semearTipos([
+        ...TIPOS_DE_TESTE,
+        { ...TIPOS_DE_TESTE[0], id: 9, code: 'LIGA', nome: 'Liga', ativo: false },
+      ]);
+      renderizar();
+      await screen.findByRole('button', { name: 'Hoje' });
+      const tipos = screen.getByRole('group', { name: 'Tipos de iniciativa' });
+      for (const nome of ['Extensão', 'Pesquisa', 'Evento', 'Liga']) {
+        expect(within(tipos).getByRole('checkbox', { name: nome })).toBeChecked();
+      }
+      // Todos marcados: não filtra por tipo.
+      await waitFor(() =>
+        expect(mockOcorrencias).toHaveBeenLastCalledWith(expect.objectContaining({ tipos: undefined })),
+      );
+    });
+
+    it('um tipo cadastrado depois já aparece marcado', async () => {
+      renderizar();
+      await screen.findByRole('button', { name: 'Hoje' });
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Pesquisa' }));
+
+      act(() =>
+        semearTipos([...TIPOS_DE_TESTE, { ...TIPOS_DE_TESTE[0], id: 9, code: 'LIGA', nome: 'Liga' }]),
+      );
+
+      expect(await screen.findByRole('checkbox', { name: 'Liga' })).toBeChecked();
+      expect(screen.getByRole('checkbox', { name: 'Pesquisa' })).not.toBeChecked();
+      await waitFor(() =>
+        expect(mockOcorrencias).toHaveBeenLastCalledWith(
+          expect.objectContaining({ tipos: ['EXTENSAO', 'EVENTO', 'LIGA'] }),
+        ),
+      );
+    });
+
+    it('desmarcar o último tipo não chama a API (e não mostra eventos)', async () => {
+      renderizar();
+      await screen.findByText('Semana de Boas-Vindas');
+
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Extensão' }));
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Pesquisa' }));
+      await waitFor(() =>
+        expect(mockOcorrencias).toHaveBeenLastCalledWith(
+          expect.objectContaining({ tipos: ['EVENTO'] }),
+        ),
+      );
+      const chamadas = mockOcorrencias.mock.calls.length;
+
+      fireEvent.click(screen.getByRole('checkbox', { name: 'Evento' }));
+
+      await waitFor(() => expect(screen.queryByText('Semana de Boas-Vindas')).toBeNull());
+      expect(mockOcorrencias.mock.calls.length).toBe(chamadas);
+    });
+
+    it('sem tipos cadastrados, avisa no filtro e ainda busca (sem filtro de tipo)', async () => {
+      semearTipos([]);
+      renderizar();
+      expect(await screen.findByText('Nenhum tipo cadastrado.')).toBeInTheDocument();
+      await waitFor(() =>
+        expect(mockOcorrencias).toHaveBeenCalledWith(expect.objectContaining({ tipos: undefined })),
+      );
+    });
+
+    it('o evento usa a cor cadastrada do tipo', async () => {
+      semearTipos([{ ...TIPOS_DE_TESTE[2], cor: '#1E3A8A' }]);
+      renderizar();
+      const titulo = await screen.findByText('Semana de Boas-Vindas');
+      const evento = titulo.closest('.fc-event') as HTMLElement;
+      expect(evento).toHaveStyle({ backgroundColor: '#1E3A8A' });
+    });
   });
 });

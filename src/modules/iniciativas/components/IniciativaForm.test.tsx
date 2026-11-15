@@ -4,6 +4,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '../../../services/api';
 import { MENSAGENS } from '../iniciativa.schema';
 import { IniciativaForm } from './IniciativaForm';
+import { tiposApi } from '../tipos.api';
+import { TIPOS_DE_TESTE } from '../tipos.fixtures';
+import { semearTipos } from '../useTipos';
+
+vi.mock('../tipos.api', () => ({ tiposApi: { listar: vi.fn() } }));
 
 const { toast } = vi.hoisted(() => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 vi.mock('@cincoders/cinnamon', () => ({ toast }));
@@ -248,5 +253,81 @@ describe('IniciativaForm', () => {
     expect(screen.getByLabelText('Tipo')).toHaveValue('PESQUISA');
     expect(screen.getByLabelText(/Enviar para votação geral/)).not.toBeChecked();
     expect(screen.getByRole('link', { name: 'Cancelar' })).toHaveAttribute('href', '/iniciativas/ini-1');
+  });
+  describe('tipos do cadastro', () => {
+    const opcoes = () =>
+      Array.from((screen.getByLabelText('Tipo') as HTMLSelectElement).options).map((o) => o.text);
+
+    it('lista só os tipos ativos, com os nomes cadastrados', () => {
+      semearTipos([
+        { ...TIPOS_DE_TESTE[0], nome: 'Palestra', code: 'PALESTRA' },
+        { ...TIPOS_DE_TESTE[1], ativo: false },
+        TIPOS_DE_TESTE[2],
+      ]);
+      montar();
+      expect(opcoes()).toEqual(['Selecione', 'Palestra', 'Evento']);
+    });
+
+    it('na edição, mantém o tipo atual mesmo desativado, marcado como desativado', () => {
+      semearTipos([TIPOS_DE_TESTE[0], { ...TIPOS_DE_TESTE[1], ativo: false }]);
+      montar({ valoresIniciais: {
+  tipo: 'PESQUISA',
+  titulo: 'Já preenchido',
+  participantes: '12',
+  resumo: 'r',
+  detalhe: 'd',
+  inicio: '2099-01-01',
+  fim: '2099-01-02',
+  horaInicio: '',
+  horaFim: '',
+  periodicidade: 'SEMANAL',
+  espaco: 'Sala',
+  organizadores: 'Ana',
+  membros: '',
+  comVotacao: true,
+} });
+      expect(opcoes()).toEqual(['Selecione', 'Extensão', 'Pesquisa (desativado)']);
+      expect(screen.getByLabelText('Tipo')).toHaveValue('PESQUISA');
+    });
+
+    it('sem nenhum tipo ativo, avisa que o comitê precisa cadastrar', () => {
+      semearTipos([]);
+      montar();
+      expect(opcoes()).toEqual(['Selecione']);
+      expect(
+        screen.getByText('Nenhum tipo de iniciativa cadastrado ainda. Peça ao comitê para cadastrar.'),
+      ).toBeInTheDocument();
+    });
+
+    it('se os tipos chegam depois de montar, o valor inicial aparece selecionado', async () => {
+      semearTipos(null);
+      vi.mocked(tiposApi.listar).mockResolvedValue(TIPOS_DE_TESTE);
+      montar({ valoresIniciais: {
+  tipo: 'PESQUISA',
+  titulo: 'Já preenchido',
+  participantes: '12',
+  resumo: 'r',
+  detalhe: 'd',
+  inicio: '2099-01-01',
+  fim: '2099-01-02',
+  horaInicio: '',
+  horaFim: '',
+  periodicidade: 'SEMANAL',
+  espaco: 'Sala',
+  organizadores: 'Ana',
+  membros: '',
+  comVotacao: true,
+} });
+      await waitFor(() => expect(screen.getByLabelText('Tipo')).toHaveValue('PESQUISA'));
+    });
+
+    it('um tipo novo do cadastro pode ser enviado', async () => {
+      semearTipos([...TIPOS_DE_TESTE, { ...TIPOS_DE_TESTE[0], id: 9, code: 'LIGA', nome: 'Liga' }]);
+      const { aoEnviar } = montar();
+      preencherTudo();
+      digitar('Tipo', 'LIGA');
+      enviar();
+      await waitFor(() => expect(aoEnviar).toHaveBeenCalledWith(expect.objectContaining({ tipo: 'LIGA' })));
+    });
   });
 });

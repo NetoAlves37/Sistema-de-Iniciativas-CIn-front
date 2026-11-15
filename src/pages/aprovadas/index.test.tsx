@@ -4,6 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { axe } from 'vitest-axe';
 import type { TipoIniciativa } from '../../modules/iniciativas/iniciativas.types';
 import { pagina, resumos } from '../../modules/iniciativas/iniciativas.fixtures';
+import { TIPOS_DE_TESTE } from '../../modules/iniciativas/tipos.fixtures';
+import { semearTipos } from '../../modules/iniciativas/useTipos';
 import AprovadasPage from './index';
 
 const mockAprovadas = vi.fn();
@@ -159,5 +161,24 @@ describe('<AprovadasPage>', () => {
     const { container } = renderizar();
     await screen.findByText('Iniciativa 3');
     expect(await axe(container)).toHaveNoViolations();
+  });
+  it('o filtro de tipo usa o cadastro (inclusive tipos desativados e renomeados)', async () => {
+    semearTipos([
+      { ...TIPOS_DE_TESTE[2], nome: 'Festival' },
+      { ...TIPOS_DE_TESTE[0], id: 9, code: 'LIGA', nome: 'Liga', ativo: false },
+    ]);
+    mockAprovadas.mockResolvedValue(pagina(aprovadas(1)));
+    renderizar();
+    await screen.findByText('Iniciativa 1');
+
+    const select = screen.getByRole('combobox', { name: 'Filtrar por tipo' });
+    expect(within(select).getAllByRole('option').map((o) => o.textContent)).toEqual([
+      'Todos os tipos',
+      'Festival',
+      'Liga',
+    ]);
+    fireEvent.change(select, { target: { value: 'LIGA' } });
+    await screen.findByText('Iniciativa 1');
+    expect(mockAprovadas).toHaveBeenLastCalledWith(expect.objectContaining({ tipo: 'LIGA' }));
   });
 });

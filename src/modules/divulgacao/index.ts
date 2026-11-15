@@ -2,7 +2,9 @@
 // Dentro do próprio módulo, importe direto do arquivo.
 export { CalendarioIniciativas } from './components/CalendarioIniciativas';
 export { CartaoAprovada } from './components/CartaoAprovada';
+export { DialogoAlterarDatas } from './components/DialogoAlterarDatas';
 export { PopoverEvento } from './components/PopoverEvento';
+export { datasAposArrastar, datasDaOcorrencia, type DestinoArrasto } from './alterarDatas';
 export type { Ocorrencia } from './divulgacao.types';
 export { useAprovadas } from './useAprovadas';
 export { ocorrenciaParaEvento, useOcorrencias } from './useOcorrencias';

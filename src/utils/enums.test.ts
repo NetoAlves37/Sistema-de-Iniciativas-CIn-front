@@ -28,7 +28,7 @@ describe('grupos de roles', () => {
 
 describe('links', () => {
   it('a fila de análise é o único item de menu exclusivo do comitê', () => {
-    expect(COMITE_ONLY_LINKS).toEqual([Links.ANALISE]);
+    expect(COMITE_ONLY_LINKS).toEqual([Links.ANALISE, Links.TIPOS]);
   });
 
   it('monta os caminhos do detalhe e da edição', () => {

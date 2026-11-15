@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { DadosIniciativaInput, DetalheIniciativa, TipoIniciativa } from './iniciativas.types';
-import { PERIODICIDADES, TIPOS } from './rotulos';
+import { PERIODICIDADES } from './rotulos';
 
 /** Limites de tamanho (RN-01), depois do trim. */
 export const LIMITES = {
@@ -44,7 +44,9 @@ const textoObrigatorio = (mensagem: string, limite: number) =>
  */
 export const iniciativaSchema = z
   .object({
-    tipo: z.string().refine((v) => (TIPOS as string[]).includes(v), MENSAGENS.tipo),
+    // Os tipos são um cadastro: aqui só se exige a escolha; se o tipo está ativo, o backend
+    // confere (422 no campo `tipo`).
+    tipo: z.string().trim().min(1, MENSAGENS.tipo),
     titulo: textoObrigatorio(MENSAGENS.titulo, LIMITES.titulo),
     participantes: z.string().trim().superRefine((valor, ctx) => {
       const n = /^\d+$/.test(valor) ? Number(valor) : Number.NaN;

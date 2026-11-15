@@ -1,6 +1,10 @@
 import { type AcaoAssincrona, useAcao } from '../compartilhado';
 import { iniciativasApi } from './iniciativas.api';
-import type { DadosIniciativaInput, DetalheIniciativa } from './iniciativas.types';
+import type {
+  DadosIniciativaInput,
+  DatasIniciativaInput,
+  DetalheIniciativa,
+} from './iniciativas.types';
 
 /** `POST /iniciativas`: submete uma nova iniciativa. */
 export function useCriarIniciativa(): AcaoAssincrona<[DadosIniciativaInput], DetalheIniciativa> {
@@ -19,4 +23,14 @@ export function useRessubmeterIniciativa(
   id: string,
 ): AcaoAssincrona<[DadosIniciativaInput], DetalheIniciativa> {
   return useAcao((dados: DadosIniciativaInput) => iniciativasApi.ressubmeter(id, dados));
+}
+
+/** `PATCH /iniciativas/:id/datas`: comitê ou ADMIN muda as datas de uma aprovada. */
+export function useAlterarDatas(): AcaoAssincrona<
+  [string, DatasIniciativaInput],
+  DetalheIniciativa
+> {
+  return useAcao((id: string, datas: DatasIniciativaInput) =>
+    iniciativasApi.alterarDatas(id, datas),
+  );
 }

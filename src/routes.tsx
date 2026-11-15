@@ -16,6 +16,7 @@ import MinhasPage from './pages/minhas';
 import AprovadasPage from './pages/aprovadas';
 import CalendarioPage from './pages/calendario';
 import AnalisePage from './pages/analise';
+import TiposPage from './pages/tipos';
 import PrivacidadePage from './pages/privacidade';
 
 /**
@@ -145,11 +146,12 @@ function RouteMap() {
           </Route>
         </Route>
 
-        {/* Fila de análise: só comitê e administrador. Quem não tem a role é
+        {/* Fila de análise e cadastro de tipos: só comitê e administrador. Quem não tem a role é
             redirecionado para /forbidden pelo RequireAuth do cinnamon. */}
         <Route element={<PageCin auth={auth} permittedRoles={COMITE_ROLES} />}>
           <Route element={<RouteErrorBoundary />}>
             <Route path={Links.ANALISE} element={<AnalisePage />} />
+            <Route path={Links.TIPOS} element={<TiposPage />} />
           </Route>
         </Route>
       </Routes>

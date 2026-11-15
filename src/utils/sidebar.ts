@@ -6,6 +6,7 @@ import {
   FolderOpen,
   Home,
   PlusCircle,
+  Tags,
 } from 'lucide-react';
 import { Links } from './enums';
 import cincodersLogo from '../assets/icons/logo_cincoders-icon.svg';
@@ -42,6 +43,12 @@ export const sidebar: SidebarData = {
       title: 'Iniciativas em análise',
       href: Links.ANALISE,
       IconComponent: ClipboardCheck,
+    },
+    {
+      id: 'tipos',
+      title: 'Tipos de iniciativa',
+      href: Links.TIPOS,
+      IconComponent: Tags,
     },
   ],
 };

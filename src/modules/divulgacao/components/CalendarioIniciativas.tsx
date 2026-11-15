@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react';
-import type { DatesSetArg, EventClickArg, EventInput } from '@fullcalendar/core';
+import type { DatesSetArg, EventClickArg, EventDropArg, EventInput } from '@fullcalendar/core';
 import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { intervaloDeDatas, type IntervaloCalendario } from '../useOcorrencias';
+import type { DestinoArrasto } from '../alterarDatas';
 import type { Ocorrencia } from '../divulgacao.types';
 
 const LARGURA_CELULAR = '(max-width: 640px)';
@@ -16,6 +18,11 @@ interface CalendarioIniciativasProps {
   onIntervalo: (intervalo: IntervaloCalendario) => void;
   /** Clique num evento: a ocorrência e o elemento clicado (âncora do popover). */
   onSelecionar: (ocorrencia: Ocorrencia, ancora: HTMLElement) => void;
+  /**
+   * Comitê ou ADMIN: permite arrastar eventos. O calendário desfaz o arrasto na hora e só
+   * avisa para onde a ocorrência foi; quem chama confirma e salva.
+   */
+  onArrastar?: (ocorrencia: Ocorrencia, destino: DestinoArrasto) => void;
 }
 
 /** Calendário (FullCalendar 6) em pt-BR, com as visões Mês, Semana, Dia e Agenda. */
@@ -23,6 +30,7 @@ export function CalendarioIniciativas({
   eventos,
   onIntervalo,
   onSelecionar,
+  onArrastar,
 }: CalendarioIniciativasProps) {
   // Até 640 px: visão inicial em lista e a barra de visões no rodapé. Fixado na montagem.
   const [estreito] = useState(
@@ -58,9 +66,18 @@ export function CalendarioIniciativas({
     if (ocorrencia) onSelecionar(ocorrencia, info.el);
   };
 
+  const aoSoltar = (info: EventDropArg) => {
+    const ocorrencia = info.event.extendedProps.ocorrencia as Ocorrencia | undefined;
+    const inicio = info.event.start;
+    // Nada muda até a confirmação: o evento volta para o lugar e o diálogo propõe as datas.
+    info.revert();
+    if (!ocorrencia || !inicio || !onArrastar) return;
+    onArrastar(ocorrencia, { inicio, fim: info.event.end, diaInteiro: info.event.allDay });
+  };
+
   return (
     <FullCalendar
-      plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
+      plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
       locales={[ptBrLocale]}
       locale="pt-br"
       initialView={estreito ? 'listMonth' : 'dayGridMonth'}
@@ -91,6 +108,9 @@ export function CalendarioIniciativas({
       slotLabelFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
       events={eventos}
       eventClick={aoClicar}
+      editable={Boolean(onArrastar)}
+      eventDurationEditable={false}
+      eventDrop={aoSoltar}
       datesSet={aoMudarDatas}
     />
   );

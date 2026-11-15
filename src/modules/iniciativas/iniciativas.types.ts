@@ -12,7 +12,25 @@ export type StatusIniciativa =
   | 'APROVADA'
   | 'REPROVADA';
 
-export type TipoIniciativa = 'EXTENSAO' | 'PESQUISA' | 'EVENTO';
+/**
+ * Código de um tipo de iniciativa (por exemplo `PALESTRA`). Os tipos são um cadastro mantido
+ * pelo comitê e pelo ADMIN; nome e cor vêm de `useTipos()`.
+ */
+export type TipoIniciativa = string;
+
+/** Um tipo do cadastro (`GET /tipos-iniciativa`). */
+export interface TipoCadastro {
+  id: number;
+  /** Código estável, usado nas iniciativas e nos filtros. Não muda ao renomear. */
+  code: TipoIniciativa;
+  nome: string;
+  /** `#RRGGBB` */
+  cor: string;
+  /** Inativo: some da seleção de novas iniciativas; as antigas continuam com ele. */
+  ativo: boolean;
+  /** Quantas iniciativas usam o tipo. Com alguma, ele não pode ser excluído. */
+  iniciativas: number;
+}
 
 export type Periodicidade = 'EVENTO_UNICO' | 'DIARIA' | 'SEMANAL' | 'QUINZENAL' | 'MENSAL';
 
@@ -124,6 +142,19 @@ export interface DadosIniciativaInput {
   membros?: string | null;
   participantes: number;
   comVotacao: boolean;
+}
+
+/**
+ * Corpo de `PATCH /iniciativas/:id/datas` (comitê ou ADMIN, só aprovadas). Muda a série
+ * inteira; horários `null` deixam a iniciativa como dia inteiro.
+ */
+export interface DatasIniciativaInput {
+  /** `YYYY-MM-DD` */
+  inicio: string;
+  fim: string;
+  /** `HH:mm`; as duas horas vêm juntas ou nenhuma. */
+  horaInicio: string | null;
+  horaFim: string | null;
 }
 
 export type OrdenacaoIniciativas = 'relevancia' | 'prazo' | 'recentes' | 'inicio';
